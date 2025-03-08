@@ -1,0 +1,33 @@
+{
+    "title": "buy small cake ;)",
+    "status": false,
+    "color": "#000000",
+    "avatar": "smile",
+    "order": 1,
+    "subTasks": [
+        {
+            "title": "task wow 1",
+            "status": false
+        }
+    ],
+    "relationships": {
+        "customer": {
+            "data": {
+                "type": "customer",
+                "id": "65768709352f16cb3f31b40a"
+            }
+        },
+        "tag": {
+            "data": {
+                "type": "tag",
+                "id": "6597897e8ffb8844f0297a24"
+            }
+        },
+        "wall": {
+            "data": {
+                "type": "wall",
+                "id": "6597a3378ffb8844f0297a25"
+            }
+        }
+    }
+}

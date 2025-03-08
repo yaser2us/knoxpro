@@ -1,0 +1,184 @@
+{
+    "id": {
+        "type": "string",
+        "$_root": {
+            "_types": {},
+            "version": "17.12.1",
+            "cache": {}
+        },
+        "$_temp": {
+            "ruleset": false,
+            "whens": {}
+        },
+        "_ids": {
+            "_byId": {},
+            "_byKey": {},
+            "_schemaChain": false
+        },
+        "_preferences": null,
+        "_valids": null,
+        "_invalids": null,
+        "_rules": [],
+        "_singleRules": {},
+        "_refs": {
+            "refs": []
+        },
+        "_flags._settings": {
+            "presence": "required",
+            "description": "Unique resource identifier"
+        },
+        "_cache": null,
+        "$_terms": {
+            "alterations": null,
+            "examples": [
+                "1234"
+            ],
+            "externals": null,
+            "metas": [],
+            "notes": [],
+            "shared": null,
+            "tags": [],
+            "whens": null,
+            "replacements": null
+        },
+        "$_super": {}
+    },
+    "type": {
+        "type": "string",
+        "$_root": {
+            "_types": {},
+            "version": "17.12.1",
+            "cache": {}
+        },
+        "$_temp": {
+            "ruleset": false,
+            "whens": {}
+        },
+        "_ids": {
+            "_byId": {},
+            "_byKey": {},
+            "_schemaChain": false
+        },
+        "_preferences": null,
+        "_valids": {
+            "_values": {},
+            "_refs": {},
+            "_lowercase": {},
+            "_override": false
+        },
+        "_invalids": null,
+        "_rules": [],
+        "_singleRules": {},
+        "_refs": {
+            "refs": []
+        },
+        "_flags._settings": {
+            "presence": "required",
+            "only": true,
+            "description": "Always \"wall\""
+        },
+        "_cache": null,
+        "$_terms": {
+            "alterations": null,
+            "examples": [
+                "wall"
+            ],
+            "externals": null,
+            "metas": [],
+            "notes": [],
+            "shared": null,
+            "tags": [],
+            "whens": null,
+            "replacements": null
+        },
+        "$_super": {}
+    },
+    "meta": {
+        "type": "object",
+        "$_root": {
+            "_types": {},
+            "version": "17.12.1",
+            "cache": {}
+        },
+        "$_temp": {
+            "ruleset": false,
+            "whens": {}
+        },
+        "_ids": {
+            "_byId": {},
+            "_byKey": {},
+            "_schemaChain": false
+        },
+        "_preferences": null,
+        "_valids": null,
+        "_invalids": null,
+        "_rules": [],
+        "_singleRules": {},
+        "_refs": {
+            "refs": []
+        },
+        "_flags._settings": {
+            "presence": "optional"
+        },
+        "_cache": null,
+        "$_terms": {
+            "alterations": null,
+            "examples": null,
+            "externals": null,
+            "metas": [],
+            "notes": [],
+            "shared": null,
+            "tags": [],
+            "whens": null,
+            "dependencies": null,
+            "keys": null,
+            "patterns": null,
+            "renames": null
+        },
+        "$_super": {}
+    },
+    "title": {
+        "type": "string",
+        "$_root": {
+            "_types": {},
+            "version": "17.12.1",
+            "cache": {}
+        },
+        "$_temp": {
+            "ruleset": false,
+            "whens": {}
+        },
+        "_ids": {
+            "_byId": {},
+            "_byKey": {},
+            "_schemaChain": false
+        },
+        "_preferences": null,
+        "_valids": null,
+        "_invalids": null,
+        "_rules": [],
+        "_singleRules": {},
+        "_refs": {
+            "refs": []
+        },
+        "_flags._settings": {
+            "presence": "required",
+            "description": "The articles title, should be between 8 and 15 words"
+        },
+        "_cache": null,
+        "$_terms": {
+            "alterations": null,
+            "examples": [
+                "Learning how to use JSON:API"
+            ],
+            "externals": null,
+            "metas": [],
+            "notes": [],
+            "shared": null,
+            "tags": [],
+            "whens": null,
+            "replacements": null
+        },
+        "$_super": {}
+    }
+} 

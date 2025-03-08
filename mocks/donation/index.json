@@ -1,0 +1,41 @@
+{
+    "kind": "donation",
+    "schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Generated schema for Root",
+        "type": "object",
+        "properties": {
+            "amount": {
+                "type": "string"
+            },
+            "city": {
+                "type": "string"
+            },
+            "view": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "amount",
+            "city"
+        ]
+    },
+    "transform": {
+        "get": "",
+        "create": {}
+    },
+    "roles": [
+        {
+            "role": "user",
+            "resource": "donation",
+            "action": "create:own",
+            "attributes": "*, !views"
+        },
+        {
+            "role": "user",
+            "resource": "donation",
+            "action": "read:own",
+            "attributes": "amount, view"
+        }
+    ]
+}

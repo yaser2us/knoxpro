@@ -1,0 +1,143 @@
+{
+    "contentType": "application/vnd.gorules.decision",
+    "edges": [
+      {
+        "id": "c50eaf00-5989-4a09-9c85-ce1b825e8ab2",
+        "sourceId": "d2bf0f61-46c3-420a-a553-dfe41598f33e",
+        "type": "edge",
+        "targetId": "5841785a-de2f-4bf1-acb5-c1fbedc874dd"
+      },
+      {
+        "id": "ed3798fb-af78-4aae-88dc-9ece3c165607",
+        "sourceId": "5841785a-de2f-4bf1-acb5-c1fbedc874dd",
+        "type": "edge",
+        "targetId": "ceb2216c-ba73-4abe-9e21-62fd8a73e8c4"
+      },
+      {
+        "id": "3fcbd273-ecf2-4ca0-bb2b-5f059e6f53a1",
+        "sourceId": "d2bf0f61-46c3-420a-a553-dfe41598f33e",
+        "type": "edge",
+        "targetId": "7389ce18-73b0-4e39-b0a0-81b7dc02db7f"
+      },
+      {
+        "id": "f246dd4f-8de1-452d-983d-721e1f6e4002",
+        "sourceId": "7389ce18-73b0-4e39-b0a0-81b7dc02db7f",
+        "type": "edge",
+        "targetId": "ceb2216c-ba73-4abe-9e21-62fd8a73e8c4"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "d2bf0f61-46c3-420a-a553-dfe41598f33e",
+        "type": "inputNode",
+        "position": {
+          "x": 50,
+          "y": 90
+        },
+        "name": "Request"
+      },
+      {
+        "id": "5841785a-de2f-4bf1-acb5-c1fbedc874dd",
+        "type": "decisionTableNode",
+        "position": {
+          "x": 370,
+          "y": 90
+        },
+        "name": "decisionTableNode 1",
+        "content": {
+          "hitPolicy": "first",
+          "inputs": [
+            {
+              "field": "company.input",
+              "id": "lb8sRlz_88",
+              "name": "Input",
+              "type": "expression"
+            },
+            {
+              "id": "hY1gqMSatq",
+              "type": "expression",
+              "field": "hmmmm",
+              "name": "hmmmm"
+            }
+          ],
+          "outputs": [
+            {
+              "field": "output.lol",
+              "id": "LQ0TG_Zykw",
+              "name": "Output",
+              "type": "expression"
+            }
+          ],
+          "rules": [
+            {
+              "_id": "LMDDSU2IXR",
+              "lb8sRlz_88": "\"hi\"",
+              "hY1gqMSatq": "",
+              "LQ0TG_Zykw": "\"byt\""
+            },
+            {
+              "_id": "PY6MP_jCXg",
+              "lb8sRlz_88": "\"wow\"",
+              "hY1gqMSatq": "3220",
+              "LQ0TG_Zykw": "\"lol\""
+            }
+          ]
+        }
+      },
+      {
+        "id": "7389ce18-73b0-4e39-b0a0-81b7dc02db7f",
+        "type": "decisionTableNode",
+        "position": {
+          "x": 370,
+          "y": 190
+        },
+        "name": "decisionTableNode 2",
+        "content": {
+          "hitPolicy": "first",
+          "inputs": [
+            {
+              "field": "hmmmm",
+              "id": "jwwwciM6dx",
+              "name": "hmmmm",
+              "type": "expression"
+            }
+          ],
+          "outputs": [
+            {
+              "field": "output.aha",
+              "id": "XefB-yy4ax",
+              "name": "Output",
+              "type": "expression"
+            }
+          ],
+          "rules": [
+            {
+              "_id": "bg7tmGL1Vs",
+              "jwwwciM6dx": "3220",
+              "XefB-yy4ax": "\"hahahahaa\""
+            }
+          ]
+        }
+      },
+      {
+        "id": "ceb2216c-ba73-4abe-9e21-62fd8a73e8c4",
+        "type": "outputNode",
+        "position": {
+          "x": 640,
+          "y": 90
+        },
+        "name": "Response"
+      },
+      {
+        "id": "6c54045a-6a23-4b7a-9743-a92b32686f38",
+        "type": "functionNode",
+        "position": {
+          "x": 390,
+          "y": 310
+        },
+        "name": "functionNode 1",
+        "content": "/**\n* @param {import('gorules').Input} input\n* @param {{\n*  moment: import('dayjs')\n*  env: Record<string, any>\n* }} helpers\n*/\nconst handler = (input, { moment, env }) => {\n  return input;\n}"
+      }
+    ]
+  }
+  

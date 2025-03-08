@@ -1,0 +1,23 @@
+{
+    "subTotal": "90",
+    "currency": "RM",
+    "tax": "2.9",
+    "items": [
+        {
+            "id": "432432432423432",
+            "kind": "goods",
+            "name": "ice cream",
+            "quantity": "3",
+            "price": "30",
+            "total": "90"
+        }
+    ],
+    "relationships": {
+        "customer": {
+            "data": {
+                "type": "customer",
+                "id": "65768709352f16cb3f31b40a"
+            }
+        }
+    }
+}

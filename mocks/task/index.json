@@ -1,0 +1,212 @@
+{
+  "kind": "task",
+  "example": {
+    "title": "buy small cake ;)",
+    "status": false,
+    "color": "#000000",
+    "avatar": "smile",
+    "order": 1,
+    "subTasks": [
+      {
+        "title": "task wow 1",
+        "status": false
+      }
+    ],
+    "relationships": {
+      "customer": {
+        "data": {
+          "type": "customer",
+          "id": "65768709352f16cb3f31b40a"
+        }
+      },
+      "tag": {
+        "data": {
+          "type": "tag",
+          "id": "6597897e8ffb8844f0297a24"
+        }
+      },
+      "wall": {
+        "data": {
+          "type": "wall",
+          "id": "6597a3378ffb8844f0297a25"
+        }
+      }
+    }
+  },
+  "schema": {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "status": {
+        "type": "boolean"
+      },
+      "color": {
+        "type": "string",
+        "minLength": 1
+      },
+      "avatar": {
+        "type": "string",
+        "minLength": 1
+      },
+      "order": {
+        "type": "number"
+      },
+      "subTasks": {
+        "type": "array",
+        "uniqueItems": true,
+        "minItems": 1,
+        "items": {
+          "required": [
+            "title",
+            "status"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "status": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ]
+              }
+            },
+            "required": [
+              "data"
+            ]
+          },
+          "tag": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ]
+              }
+            },
+            "required": [
+              "data"
+            ]
+          },
+          "wall": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ]
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        },
+        "required": [
+          "customer",
+          "tag",
+          "wall"
+        ]
+      }
+    },
+    "required": [
+      "title",
+      "status",
+      "color",
+      "avatar",
+      "order",
+      "subTasks",
+      "relationships"
+    ]
+  },
+  "transform": {
+    "create": {}
+  },
+  "roles": [
+    {
+      "role": "admin",
+      "resource": "users-aggregate",
+      "action": "create:own",
+      "attributes": "*, !views"
+    },
+    {
+      "role": "admin",
+      "resource": "users-aggregate",
+      "action": "read:own",
+      "attributes": "amount, view"
+    },
+    {
+      "role": "admin",
+      "resource": "/api/users/aggregate",
+      "action": "read:own",
+      "attributes": [
+        "*",
+        "!meta",
+        "!data.attributes"
+      ]
+    },
+    {
+      "role": "admin",
+      "resource": "/api/users/:id",
+      "action": "read",
+      "attributes": [
+        "*",
+        "!meta",
+        "!data.attributes"
+      ]
+    }
+  ]
+}

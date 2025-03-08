@@ -1,0 +1,73 @@
+{
+    "schema": {
+        "id": "/SimplePerson",
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "available": {
+                "type": "boolean"
+            },
+            "interest": {
+                "type": "string",
+                "minLength": 3
+            },
+            "parentInfoArr": {
+                "description": "Tags for the product",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "parentContact": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "parentContact"
+                    ]
+                },
+                "minItems": 1,
+                "uniqueItems": true
+            }
+        },
+        "required": [
+            "name",
+            "interest"
+        ]
+    },
+    "transform": {
+        "create": "{\"anyFriendyou\": relationships.anyFriend.data.id, \"name\": name, \"hi\": parentInfoArr[0].parentContact }"
+    },
+    "rules": {},
+    "relationships": {
+        "category": "category"
+    },
+    "collections": {
+        "category": [
+            {
+                "$lookup": {
+                    "from": "category",
+                    "as": "relationship.category.data",
+                    "localField": "category",
+                    "foreignField": "_id"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$category",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$addFields": {
+                  "relationship.category.data": {
+                    "$arrayElemAt": ["$relationship.category.data",
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

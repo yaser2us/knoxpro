@@ -1,0 +1,63 @@
+{
+    "schema": {
+        "id": "/contact",
+        "type": "object",
+        "properties": {
+            "firstname": {
+                "type": "string",
+                "minLength": 3
+            },
+            "surname": {
+                "type": "string",
+                "minLength": 5
+            },
+            "title": {
+                "type": "string",
+                "minLength": 2
+            },
+            "contacts": {
+                "description": "contact information for users",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "number": {
+                            "type": "string"
+                        },
+                        "numberType": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "number",
+                        "numberType"
+                    ]
+                },
+                "minItems": 1,
+                "uniqueItems": true
+            }
+        },
+        "required": [
+            "firstname",
+            "surname",
+            "title",
+            "contacts"
+        ]
+    },
+    "transform": {
+        "create": "{\"anyFriendyou\": contacts[0].number, \"name\": title & \" \" & surname & \" \" & firstname, \"hi\": contacts[0].numberType }",
+        "get": "result.{\"value\" : { \"data\" : { \"type\": \"contacts\", \"id\": _id } }, \"label\" : title & ' ' & surname  }"
+    },
+    "relationships": {
+        "category": "data.id"
+    },
+    "collections": {
+        "category": {
+            "from": "category",
+            "as": "thanksAllah",
+            "localField": "relationships.category.data.id",
+            "foreignField": "_id"
+        }
+    },
+    "rules": {}
+}

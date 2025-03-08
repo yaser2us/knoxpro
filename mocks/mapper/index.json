@@ -1,0 +1,14 @@
+{
+    "transformedBooks": {
+        "mapping": {
+          "$each(books)": {
+            "bookId": "id",
+            "bookTitle": "title",
+            "authorName": "author.name",
+            "authorAge": "2023 - author.birthYear",
+            "publishedYear": "publicationYear",
+            "isClassic": "genres.includes('Classic')"
+          }
+        }
+      }
+}

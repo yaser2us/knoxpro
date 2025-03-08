@@ -1,0 +1,21 @@
+{
+    "kind": "category",
+    "schema": {
+        "id": "/category",
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "minLength": 3
+            }
+        },
+        "required": [
+            "name"
+        ]
+    },
+    "transform": {
+        "get": {},
+        "create": "{\"anyFriendyou\": categoryName }"
+    },
+    "rules": {}
+}

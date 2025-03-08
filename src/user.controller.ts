@@ -32,8 +32,11 @@ import {
 //   import { GuardService, EntityName } from '../../service/guard.service';
 
 import { Users } from './Entity/users';
+import { Roles } from './common/decorators/roles.decorator';
 //   import { AtomicInterceptor } from '../../service/atomic.interceptor';
 import { YourEntityRepository } from './repo/user.repo';
+import { RolesGuard } from './common/guards/roles.guard';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 //   @UseGuards(GuardService)
 //   @UseFilters(new HttpExceptionFilter())
 //   @UseInterceptors(ControllerInterceptor)
@@ -44,7 +47,10 @@ export class ExtendUserController extends JsonBaseController<Users> {
     constructor(private readonly yourEntityRepo: YourEntityRepository) {
         super();
     }
-//@Query('field') field: string,
+    //@Query('field') field: string,
+    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard)
+    @Roles('readOwn','users-aggregate')
     @Get('/aggregate')
     async aggregate(@Query('field') field: string, query: QueryType<Users>) {
         console.log(query, '[query]')
@@ -53,6 +59,9 @@ export class ExtendUserController extends JsonBaseController<Users> {
     }
 
     // @Inject(ExampleService) protected exampleService: ExampleService;
+    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard)
+    @Roles('readOwn','users-get-one')
     override getOne(
         id: string | number,
         query: QueryOne<Users>

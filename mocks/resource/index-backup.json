@@ -1,0 +1,38 @@
+{
+    "schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Resource",
+        "type": "object",
+        "properties": {
+            "kind": {
+                "type": "string"
+            },
+            "example": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            },
+            "schema": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            },
+            "transform": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        },
+        "required": [
+            "example",
+            "schema",
+            "transform",
+            "kind"
+        ]
+    },
+    "example": {},
+    "transform": {
+        "get": "",
+        "create": {}
+    }
+}

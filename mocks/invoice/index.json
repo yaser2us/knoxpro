@@ -1,0 +1,123 @@
+{
+    "schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Generated schema for Root",
+        "type": "object",
+        "properties": {
+            "subTotal": {
+                "type": "string"
+            },
+            "currency": {
+                "type": "string"
+            },
+            "tax": {
+                "type": "string"
+            },
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "kind": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "quantity": {
+                            "type": "string"
+                        },
+                        "price": {
+                            "type": "string"
+                        },
+                        "total": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "kind",
+                        "name",
+                        "quantity",
+                        "price",
+                        "total"
+                    ]
+                }
+            },
+            "relationships": {
+                "type": "object",
+                "properties": {
+                    "customer": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "id"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                },
+                "required": [
+                    "customer"
+                ]
+            }
+        },
+        "required": [
+            "subTotal",
+            "currency",
+            "tax",
+            "items",
+            "relationships"
+        ]
+    },
+    "relationships": {
+        "customer": "relationships.customer.data.id"
+    },
+    "transform": {
+        "create": {}
+    },
+    "collections": {
+        "customer": [
+            {
+                "$lookup": {
+                    "from": "customer",
+                    "as": "relationships.customer.data",
+                    "localField": "relationships.customer.data.id",
+                    "foreignField": "_id"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$customer",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$addFields": {
+                  "relationship.customer.data": {
+                    "$arrayElemAt": ["$relationship.customer.data",
+                            0
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "title": "myself",
+    "status": false,
+    "order": 1,
+    "relationships": {
+        "customer": {
+            "data": {
+                "type": "customer",
+                "id": "65768709352f16cb3f31b40a"
+            }
+        }
+    }
+}

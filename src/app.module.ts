@@ -17,6 +17,13 @@ import * as process from 'process';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ExtendUserController } from './user.controller';
 import { YourEntityRepository } from './repo/user.repo';
+import { CacheModule } from '@nestjs/cache-manager';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { CombinedSlugService, QueryParamSlugService, SubdomainSlugService } from './common/slug.service';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path';
 
 
 const config: DataSourceOptions = {
@@ -39,6 +46,34 @@ const dataSource =  new DataSource({ ...config });
 
 @Module({
   imports: [
+    AuthModule,
+    UsersModule,
+    CacheModule.register(),
+    MulterModule.register({
+      dest: './mocks/uploads', // Set the destination folder for uploaded files
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          cb(null, './mocks/uploads');
+        },
+        filename: (req, file, cb) => {
+
+          // Access dynamic variable from the request body (e.g., req.body.dynamicName)
+          const dynamicName = req.body.kind || 'defaultName';
+
+          const fileExt = path.extname(file.originalname);
+          const newFileName = `${dynamicName}_${Date.now()}${fileExt}`;
+          
+          cb(null, newFileName);
+
+          // const fileExt = path.extname(file.originalname);
+          // const randomName = Array(32)
+          //   .fill(null)
+          //   .map(() => Math.round(Math.random() * 16).toString(16))
+          //   .join('');
+          // cb(null, `${randomName}${fileExt}`);
+        },
+      }),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -64,7 +99,17 @@ const dataSource =  new DataSource({ ...config });
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: CombinedSlugService,
+      useFactory: () =>
+        new CombinedSlugService([
+          new QueryParamSlugService(),
+          new SubdomainSlugService(),
+        ]),
+    }
+  ],
   // exports: [YourEntityRepository], // Export if needed in other modules
 })
 export class AppModule { }

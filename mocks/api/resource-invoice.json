@@ -1,0 +1,36 @@
+{
+    "createTime": 1672634392160,
+    "updateTime": 1672634842426,
+    "accessPolicy": {},
+    "name": "voxyResourceInvoice",
+    "description": "Edit or extend this sample workflow. Set the workflow name to get started",
+    "version": 11,
+    "tasks": [
+      {
+        "name": "get_resource_invoice",
+        "taskReferenceName": "get_resource_invoice",
+        "inputParameters": {
+          "http_request": {
+            "uri": "http://localhost:3033/commerce/resource/invoice",
+            "method": "GET"
+          }
+        },
+        "type": "HTTP",
+        "startDelay": 0,
+        "optional": false,
+        "asyncComplete": false
+      }
+    ],
+    "inputParameters": [],
+    "outputParameters": {
+      "data": "${get_resource_invoice.output.response.body}"
+    },
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "yasser@email.com",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {}
+  }
