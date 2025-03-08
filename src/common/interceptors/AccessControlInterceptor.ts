@@ -56,7 +56,7 @@ export class AccessControlInterceptor implements NestInterceptor {
 
         const { params, user = {} } = req;
 
-        const configType = await readFile(params.resource);
+        const configType = await readFile("task");
         const configJSON = configType; //JSON.parse(configType);
         const {
             rule,
@@ -72,16 +72,16 @@ export class AccessControlInterceptor implements NestInterceptor {
 
         const ac = new AccessControl(roles);
         const permission = ac.can(user.role?.toLowerCase())[action](resource);
-        // if (!permission.granted) {
-        //     throw new ForbiddenException('Access denied');
-        // }
+        if (!permission.granted) {
+            throw new ForbiddenException('Access denied');
+        }
 
         return next.handle().pipe(
             map((data) => {
 
                 if (permission.granted) {
-                    console.log('[AccessControlInterceptor], granted', data);
                     try {
+                        console.log('[AccessControlInterceptor], granted', data);
                         return permission.filter(data); // ✅ Apply field-level filtering
                     } catch (e) {
                         console.log(e, '[AccessControlInterceptor] error')
@@ -89,9 +89,8 @@ export class AccessControlInterceptor implements NestInterceptor {
                     }
                 }
 
-                const ownPermission = ac.can(user.role).readOwn('profile');
-                if (ownPermission.granted && data.userId === user.id) {
-                    return ownPermission.filter(data); // ✅ Filter fields for own data
+                if (permission.granted && data.userId === user.id) {
+                    return permission.filter(data); // ✅ Filter fields for own data
                 }
 
                 // return {}; // Return empty object if access is denied
