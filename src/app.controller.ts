@@ -31,9 +31,9 @@ import { PokemonGuard } from './common/guards/pokemon.guard';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @UseGuards(RolesGuard)
-  @UseGuards(JwtAuthGuard)
-  @Roles('readOwn','users-get-one')
+  // @UseGuards(RolesGuard)
+  // @UseGuards(JwtAuthGuard)
+  // @Roles('readOwn','users-get-one')
   @Get()
   getHello(): string {
     return this.appService.getHello();

@@ -191,7 +191,7 @@
     {
       "role": "admin",
       "resource": "/api/users/aggregate",
-      "action": "read:own",
+      "action": "read",
       "attributes": [
         "*",
         "!meta",

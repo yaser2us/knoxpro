@@ -24,6 +24,8 @@ import { CombinedSlugService, QueryParamSlugService, SubdomainSlugService } from
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
 
 const config: DataSourceOptions = {
@@ -108,7 +110,11 @@ const dataSource =  new DataSource({ ...config });
           new QueryParamSlugService(),
           new SubdomainSlugService(),
         ]),
-    }
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
   // exports: [YourEntityRepository], // Export if needed in other modules
 })

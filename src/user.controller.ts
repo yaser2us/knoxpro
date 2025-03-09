@@ -60,7 +60,7 @@ export class ExtendUserController extends JsonBaseController<Users> {
 
     // @Inject(ExampleService) protected exampleService: ExampleService;
     // @UseGuards(RolesGuard)
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     // @Roles('readOwn','users-get-one')
     override getOne(
         id: string | number,
