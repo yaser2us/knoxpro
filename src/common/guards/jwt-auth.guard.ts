@@ -29,6 +29,11 @@ export const ROUTE_ACCESS_CONFIG = {
         { method: 'POST', path: '/auth/login' },
         { method: 'POST', path: '/auth/register' },
         { method: 'GET', path: '/api' },
+        { method: 'GET', path: '/api/public-key' },
+        // { method: 'POST', path: '/api/decrypt' },
+        // { method: 'POST', path: '/api/security/decrypt' },
+        // { method: 'POST', path: '/api/security/encrypt' },
+        // { method: 'GET', path: '/api/security/init' },
     ],
     blacklist: [
         { method: 'GET', path: '/admin' },

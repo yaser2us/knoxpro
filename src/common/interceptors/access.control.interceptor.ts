@@ -19,12 +19,23 @@ export class AccessControlInterceptor implements NestInterceptor {
         console.log('[AccessControlInterceptor] path', req.route?.path);
 
         // ✅ Define routes to be whitelisted (no permission check needed)
-        const whitelist = ['/api/auth/login', '/api/auth/register', '/api'];
+        const whitelist = [
+            '/api/public-key',
+            '/api/auth/login', 
+            '/api/auth/register', 
+            '/api', 
+            '/api/upload/:resource', 
+            // '/api/decrypt',
+            '/api/security/decrypt',
+            '/api/security/encrypt',
+            '/api/security/init'
+        ];
 
         if (whitelist.includes(req.route?.path)) {
             // ✅ Skip permission check for whitelisted routes
             return next.handle();
         }
+        
         // Determine the resource and action from the request
         // const resource = req.baseUrl.replace('/', ''); // Example: /users -> "users"
         // ✅ Extract resource name dynamically (e.g., "/users/:id" -> "users")

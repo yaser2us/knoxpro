@@ -48,9 +48,9 @@ export class ExtendUserController extends JsonBaseController<Users> {
         super();
     }
     //@Query('field') field: string,
-    @UseGuards(RolesGuard)
-    @UseGuards(JwtAuthGuard)
-    @Roles('readOwn','users-aggregate')
+    // @UseGuards(RolesGuard)
+    // @UseGuards(JwtAuthGuard)
+    // @Roles('readOwn','users-aggregate')
     @Get('/aggregate')
     async aggregate(@Query('field') field: string, query: QueryType<Users>) {
         console.log(query, '[query]')

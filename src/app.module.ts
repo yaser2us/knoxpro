@@ -26,6 +26,7 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { SecurityModule } from './security/security.module';
 
 
 const config: DataSourceOptions = {
@@ -50,7 +51,11 @@ const dataSource =  new DataSource({ ...config });
   imports: [
     AuthModule,
     UsersModule,
-    CacheModule.register(),
+    SecurityModule,
+    // CacheModule.register({
+    //   ttl: 3600, // Cache expiration time in seconds (1 hour)
+    //   max: 1000, // Maximum items in cache
+    // }),
     MulterModule.register({
       dest: './mocks/uploads', // Set the destination folder for uploaded files
       storage: diskStorage({
