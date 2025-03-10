@@ -200,6 +200,22 @@
     },
     {
       "role": "admin",
+      "resource": "/api/users",
+      "action": "read",
+      "attributes": [
+        "*"
+      ]
+    },
+    {
+      "role": "admin",
+      "resource": "/api/users",
+      "action": "create",
+      "attributes": [
+        "*"
+      ]
+    },
+    {
+      "role": "admin",
       "resource": "/api/users/:id",
       "action": "read",
       "attributes": [

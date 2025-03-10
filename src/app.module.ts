@@ -24,9 +24,11 @@ import { CombinedSlugService, QueryParamSlugService, SubdomainSlugService } from
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { SecurityModule } from './security/security.module';
+import { RsaService } from 'src/security/security.service';
+import { AccessControlInterceptor } from './common/interceptors/access.control.interceptor';
 
 
 const config: DataSourceOptions = {
@@ -43,7 +45,7 @@ const config: DataSourceOptions = {
   // ...(process.env['DB_TYPE'] === 'mysql' ? { connectorPackage: 'mysql2' } : {}),
 };
 
-const dataSource =  new DataSource({ ...config });
+const dataSource = new DataSource({ ...config });
 
 
 
@@ -69,7 +71,7 @@ const dataSource =  new DataSource({ ...config });
 
           const fileExt = path.extname(file.originalname);
           const newFileName = `${dynamicName}_${Date.now()}${fileExt}`;
-          
+
           cb(null, newFileName);
 
           // const fileExt = path.extname(file.originalname);
@@ -106,6 +108,7 @@ const dataSource =  new DataSource({ ...config });
     }),
   ],
   controllers: [AppController],
+
   providers: [
     AppService,
     {
@@ -119,6 +122,10 @@ const dataSource =  new DataSource({ ...config });
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AccessControlInterceptor, // ✅ Register interceptor globally
     },
   ],
   // exports: [YourEntityRepository], // Export if needed in other modules

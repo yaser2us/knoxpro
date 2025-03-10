@@ -12,7 +12,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalInterceptors(new AccessControlInterceptor(new Reflector()));
+  // app.useGlobalInterceptors(new AccessControlInterceptor(new Reflector()));
 
   await app.listen(process.env.PORT ?? 3030);
 }

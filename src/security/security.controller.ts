@@ -4,7 +4,9 @@ import { getPublicKey } from 'src/common/security';
 
 @Controller('security')
 export class SecurityController {
-    constructor(private readonly rsaService: RsaService) { }
+    constructor(
+        private readonly rsaService: RsaService
+    ) { }
 
     @Get('init')
     async getPublicKey(@Req() req) {
