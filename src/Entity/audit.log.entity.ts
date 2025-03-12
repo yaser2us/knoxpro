@@ -1,25 +1,26 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Tenant } from './tenant.entity';
+import { User } from './user.entity';
 
-@Entity('users')
-export class User {
+@Entity('audit_logs')
+export class AuditLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(() => Tenant, { onDelete: 'CASCADE' })
   tenant: Tenant;
 
-  @Column({ unique: true })
-  email: string;
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  user: User;
 
   @Column()
-  passwordHash: string;
+  action: string;
 
   @Column()
-  role: string;
+  resource: string;
 
-  @Column({ default: false })
-  isGlobalAdmin: boolean;  // True for ABC Admins
+  @Column('jsonb')
+  details: object;
 
   @CreateDateColumn()
   createdAt: Date;

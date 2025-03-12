@@ -19,7 +19,7 @@ import {
   IComments,
   IBookList,
   BookList,
-} from '.';
+} from './';
 
 export type IUsers = Users;
 

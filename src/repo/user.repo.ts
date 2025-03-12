@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../Entity/users';
+import { Users } from '../Entity/legacy/users';
 import { Query } from 'json-api-nestjs';
 
 @Injectable()

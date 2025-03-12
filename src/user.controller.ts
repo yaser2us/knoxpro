@@ -31,7 +31,7 @@ import {
 //   } from '../../service/http-exception.filter';
 //   import { GuardService, EntityName } from '../../service/guard.service';
 
-import { Users } from './Entity/users';
+import { Users } from './Entity/legacy/users';
 import { Roles } from './common/decorators/roles.decorator';
 //   import { AtomicInterceptor } from '../../service/atomic.interceptor';
 import { YourEntityRepository } from './repo/user.repo';

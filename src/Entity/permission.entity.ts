@@ -1,25 +1,26 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Tenant } from './tenant.entity';
+import { Role } from './role.entity';
 
-@Entity('users')
-export class User {
+@Entity('permissions')
+export class Permission {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(() => Tenant, { onDelete: 'CASCADE' })
   tenant: Tenant;
 
-  @Column({ unique: true })
-  email: string;
+  @ManyToOne(() => Role, { onDelete: 'CASCADE' })
+  role: Role;
 
   @Column()
-  passwordHash: string;
+  resource: string;
 
   @Column()
-  role: string;
+  action: string;
 
-  @Column({ default: false })
-  isGlobalAdmin: boolean;  // True for ABC Admins
+  @Column('jsonb', { default: [] }) // JSON array for attribute-based access control
+  attributes: string[];
 
   @CreateDateColumn()
   createdAt: Date;

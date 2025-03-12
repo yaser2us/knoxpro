@@ -216,6 +216,30 @@
     },
     {
       "role": "admin",
+      "resource": "/api/tenant",
+      "action": "create",
+      "attributes": [
+        "*"
+      ]
+    },
+    {
+      "role": "admin",
+      "resource": "/api/tenant",
+      "action": "read",
+      "attributes": [
+        "*"
+      ]
+    },
+    {
+      "role": "admin",
+      "resource": "/api/tenant/:id",
+      "action": "read",
+      "attributes": [
+        "*"
+      ]
+    },
+    {
+      "role": "admin",
       "resource": "/api/users/:id",
       "action": "read",
       "attributes": [

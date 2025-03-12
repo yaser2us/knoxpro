@@ -13,12 +13,10 @@ export enum CommentKind {
   Note = 'NOTE',
 }
 
-import { Users, IUsers } from '.';
+export type IUser = Users;
 
-export type IComments = Comments;
-
-@Entity('comments')
-export class Comments {
+@Entity('users')
+export class Users {
   @PrimaryGeneratedColumn()
   public id!: number;
 
@@ -51,9 +49,9 @@ export class Comments {
   })
   public updatedAt!: Date;
 
-  @ManyToOne(() => Users, (item) => item.id)
-  @JoinColumn({
-    name: 'created_by',
-  })
-  public createdBy!: IUsers;
+  // @ManyToOne(() => Users, (item) => item.id)
+  // @JoinColumn({
+  //   name: 'created_by',
+  // })
+  // public createdBy!: IUsers;
 }

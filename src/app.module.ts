@@ -3,11 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { JsonApiModule, TypeOrmJsonApiModule } from 'json-api-nestjs';
 import {
-  Users,
-  Addresses,
-  Comments,
-  Roles,
-  BookList,
+  // Users,
+  // Addresses,
+  // Comments,
+  // Roles,
+  // BookList,
+  User,
+  UserRole,
+  Role,
+  Tenant,
+  Permission,
+  AuditLog,
+  TenantSetting,
 } from './Entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -30,22 +37,25 @@ import { SecurityModule } from './security/security.module';
 import { RsaService } from 'src/security/security.service';
 import { AccessControlInterceptor } from './common/interceptors/access.control.interceptor';
 
+import dataSource, { config } from './database';
 
-const config: DataSourceOptions = {
-  type: 'postgres', //process.env['DB_TYPE'] as 'postgres' | 'postgres',
-  host: "localhost", // process.env['DB_HOST'],
-  port: 5432, //parseInt(`${process.env['DB_PORT']}`, 5432),
-  username: "postgres", //process.env['DB_USERNAME'],
-  password: "Odenza@2025", //process.env['DB_PASSWORD'],
-  database: "yasser", //process.env['DB_NAME'],
-  logging: 'all', //process.env['DB_LOGGING'] === '1',
-  entities: [join(__dirname, '/Entity/*{.ts,.js}')],
-  // migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
-  // entities: [join(__dirname, '/entities/**/*{.ts,.js}')],
-  // ...(process.env['DB_TYPE'] === 'mysql' ? { connectorPackage: 'mysql2' } : {}),
-};
+import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
 
-const dataSource = new DataSource({ ...config });
+// const config: DataSourceOptions = {
+//   type: 'postgres', //process.env['DB_TYPE'] as 'postgres' | 'postgres',
+//   host: "localhost", // process.env['DB_HOST'],
+//   port: 5432, //parseInt(`${process.env['DB_PORT']}`, 5432),
+//   username: "postgres", //process.env['DB_USERNAME'],
+//   password: "Odenza@2025", //process.env['DB_PASSWORD'],
+//   database: "yasser", //process.env['DB_NAME'],
+//   logging: 'all', //process.env['DB_LOGGING'] === '1',
+//   entities: [join(__dirname, '/Entity/*{.ts,.js}')],
+//   // migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
+//   // entities: [join(__dirname, '/entities/**/*{.ts,.js}')],
+//   // ...(process.env['DB_TYPE'] === 'mysql' ? { connectorPackage: 'mysql2' } : {}),
+// };
+
+// const dataSource = new DataSource({ ...config });
 
 
 
@@ -88,22 +98,33 @@ const dataSource = new DataSource({ ...config });
     }),
     TypeOrmModule.forRoot({
       ...config,
+      synchronize: true,
+      autoLoadEntities: true,
+      logging: true,
     }),
     JsonApiModule.forRoot(TypeOrmJsonApiModule, {
       ...dataSource,
       entities: [
-        Users,
-        Addresses,
-        Comments,
-        Roles,
-        BookList,
+        // Users,
+        // Addresses,
+        // Comments,
+        // BookList,
+        // Roles,
+        User,
+        UserRole,
+        Role,
+        Tenant,
+        Permission,
+        AuditLog,
+        TenantSetting,
       ],
-      controllers: [ExtendUserController],
-      providers: [YourEntityRepository],
+      // controllers: [ExtendUserController],
+      // providers: [YourEntityRepository],
       options: {
         debug: true,
         requiredSelectField: false,
         operationUrl: 'operation',
+        pipeForId: UUIDValidationPipe
       },
     }),
   ],
