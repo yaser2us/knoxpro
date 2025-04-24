@@ -1,0 +1,58 @@
+erDiagram
+    WORKSPACES {
+        UUID id PK
+        TEXT name
+    }
+
+    USERS {
+        UUID id PK
+        TEXT email
+    }
+
+    WORKSPACE_USERS {
+        UUID id PK
+        UUID user_id FK
+        UUID workspace_id FK
+    }
+
+    ROLES {
+        UUID id PK
+        UUID workspace_id FK
+        TEXT name
+    }
+
+    PERMISSIONS {
+        UUID id PK
+        TEXT name
+    }
+
+    ROLE_PERMISSIONS {
+        UUID role_id FK
+        UUID permission_id FK
+    }
+
+    USER_ROLES {
+        UUID workspace_user_id FK
+        UUID role_id FK
+    }
+
+    RESOURCES {
+        UUID id PK
+        TEXT name
+        TEXT type 
+    }
+
+    RESOURCE_PERMISSIONS {
+        UUID resource_id FK
+        UUID permission_id FK
+    }
+
+    WORKSPACES ||--o{ WORKSPACE_USERS : "has members"
+    USERS ||--o{ WORKSPACE_USERS : "can join workspaces"
+    WORKSPACES ||--o{ ROLES : "has roles"
+    ROLES ||--o{ ROLE_PERMISSIONS : "has permissions"
+    PERMISSIONS ||--o{ ROLE_PERMISSIONS : "belongs to roles"
+    WORKSPACE_USERS ||--o{ USER_ROLES : "can have roles"
+    ROLES ||--o{ USER_ROLES : "assigned to users"
+    RESOURCES ||--o{ RESOURCE_PERMISSIONS : "has specific permissions"
+    PERMISSIONS ||--o{ RESOURCE_PERMISSIONS : "granted to resources"

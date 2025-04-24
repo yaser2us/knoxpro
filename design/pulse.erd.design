@@ -1,0 +1,100 @@
+erDiagram
+    USERS ||--o{ USER_ROLES : has
+    USERS ||--o{ ACCESS_ACTIONS : performs
+    USERS ||--o{ ACCESS_EVENTS : triggers
+
+    WORKSPACES ||--o{ USER_ROLES : contains
+    WORKSPACES ||--o{ ROLES : defines
+    WORKSPACES ||--o{ RESOURCE_TYPES : scopes
+
+    ROLES ||--o{ USER_ROLES : links
+    ROLES ||--o{ ROLE_PERMISSIONS : grants
+
+    RESOURCE_TYPES ||--o{ RESOURCE_ACTIONS : defines
+    RESOURCE_TYPES ||--o{ ROLE_PERMISSIONS : for
+
+    RESOURCES ||--o{ ACCESS_ACTIONS : targets
+    RESOURCES ||--o{ ACCESS_EVENTS : appears
+
+    ACCESS_ACTIONS ||--o{ ACCESS_EVENTS : logs
+
+    USERS {
+        UUID id
+        TEXT email
+        TEXT name
+        TEXT domain
+        JSONB metadata
+    }
+
+    WORKSPACES {
+        UUID id
+        TEXT name
+        JSONB metadata
+    }
+
+    ROLES {
+        UUID id
+        UUID workspace_id
+        TEXT name
+        TEXT description
+    }
+
+    USER_ROLES {
+        UUID id
+        UUID user_id
+        UUID role_id
+        UUID workspace_id
+    }
+
+    RESOURCE_TYPES {
+        UUID id
+        UUID workspace_id
+        TEXT name
+    }
+
+    RESOURCE_ACTIONS {
+        UUID id
+        UUID resource_type_id
+        TEXT action_name
+    }
+
+    ROLE_PERMISSIONS {
+        UUID id
+        UUID role_id
+        UUID resource_type_id
+        TEXT action_name
+    }
+
+    RESOURCES {
+        UUID id
+        TEXT type
+        JSONB metadata
+    }
+
+    ACCESS_ACTIONS {
+        UUID id
+        UUID actor_id
+        TEXT resource_type
+        UUID resource_id
+        TEXT action_type
+        TIMESTAMP expires_at
+        BOOLEAN one_time
+        TIMESTAMP used_at
+        JSONB conditions
+        BOOLEAN enabled
+        TEXT anonymous_token
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    ACCESS_EVENTS {
+        UUID id
+        UUID action_id
+        UUID actor_id
+        TEXT resource_type
+        UUID resource_id
+        TEXT action_type
+        TEXT event_type
+        TIMESTAMP occurred_at
+        JSONB metadata
+    }

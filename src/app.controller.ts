@@ -29,10 +29,16 @@ import { PokemonGuard } from './common/guards/pokemon.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
 import { decryptAESKey, decryptPayload, getPublicKey } from './common/security';
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(
+    private readonly eventEmitter: EventEmitter2,
+    private readonly appService: AppService
+  ) { }
 
   @Get()
   getHello(): string {
@@ -80,6 +86,28 @@ export class AppController {
   ) {
 
     console.log(file, '[file]');
+
+    this.eventEmitter.emit('access.auto_grant', {
+      resourceId: "uploaded-file",
+      resourceType: type,
+      userId: "8e1dd9b4-dc1e-4140-9c92-39a5db38bc11",
+      actions: ['view', 'edit'] // 👈 Optional override
+    });
+
+    this.eventEmitter.emit('pulse.flow_grant', {
+      resourceId:  "uploaded-file-workflow-lol",
+      resourceType: 'lab_report',
+      grants: [
+        {
+          to: "8e1dd9b4-dc1e-4140-9c92-39a5db38bc11",
+          actions: ['view'],
+          grant_if: { role: 'doctor' }
+        }
+      ]
+    });
+    
+
+
     return {
       type,
       body,

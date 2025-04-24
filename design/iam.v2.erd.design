@@ -1,0 +1,89 @@
+erDiagram
+    WORKSPACES {
+        UUID id PK
+        TEXT name
+    }
+
+    USERS {
+        UUID id PK
+        TEXT email
+    }
+
+    WORKSPACE_USERS {
+        UUID id PK
+        UUID user_id FK
+        UUID workspace_id FK
+    }
+
+    ROLES {
+        UUID id PK
+        UUID workspace_id FK
+        TEXT name
+    }
+
+    PERMISSIONS {
+        UUID id PK
+        TEXT name
+    }
+
+    ROLE_PERMISSIONS {
+        UUID role_id FK
+        UUID permission_id FK
+    }
+
+    USER_ROLES {
+        UUID workspace_user_id FK
+        UUID role_id FK
+    }
+
+    RESOURCES {
+        UUID id PK
+        TEXT name
+        TEXT type 
+        JSONB metadata
+        UUID parent_id FK
+    }
+
+    RESOURCE_PERMISSIONS {
+        UUID resource_id FK
+        UUID permission_id FK
+    }
+
+    POLICIES {
+        UUID id PK
+        UUID workspace_id FK
+        TEXT name
+        JSONB rules
+    }
+
+    POLICY_ASSIGNMENTS {
+        UUID id PK
+        UUID policy_id FK
+        UUID workspace_user_id FK
+        UUID resource_id FK
+    }
+    
+    EMERGENCY_ACCESS {
+        UUID id PK
+        UUID workspace_user_id FK
+        UUID resource_id FK
+        TIMESTAMP expires_at
+        BOOLEAN is_active
+    }
+
+    WORKSPACES ||--o{ WORKSPACE_USERS : "has members"
+    USERS ||--o{ WORKSPACE_USERS : "can join workspaces"
+    WORKSPACES ||--o{ ROLES : "has roles"
+    ROLES ||--o{ ROLE_PERMISSIONS : "has permissions"
+    PERMISSIONS ||--o{ ROLE_PERMISSIONS : "belongs to roles"
+    WORKSPACE_USERS ||--o{ USER_ROLES : "can have roles"
+    ROLES ||--o{ USER_ROLES : "assigned to users"
+    RESOURCES ||--o{ RESOURCE_PERMISSIONS : "has specific permissions"
+    PERMISSIONS ||--o{ RESOURCE_PERMISSIONS : "granted to resources"
+    WORKSPACES ||--o{ POLICIES : "has policies"
+    POLICIES ||--o{ POLICY_ASSIGNMENTS : "assigned to users/resources"
+    WORKSPACE_USERS ||--o{ POLICY_ASSIGNMENTS : "can have policies"
+    RESOURCES ||--o{ POLICY_ASSIGNMENTS : "policies can target resources"
+    WORKSPACE_USERS ||--o{ EMERGENCY_ACCESS : "can request emergency access"
+    RESOURCES ||--o{ EMERGENCY_ACCESS : "emergency access is granted on resources"
+

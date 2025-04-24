@@ -9,7 +9,7 @@ const config: DataSourceOptions = {
     password: "Odenza@2025", //process.env['DB_PASSWORD'],
     database: "yasser", //process.env['DB_NAME'],
     logging: 'all', //process.env['DB_LOGGING'] === '1',
-    entities: [join(__dirname, '/Entity/*{.ts,.js}')],
+    entities: [join(__dirname, '/pulse/entity/*{.ts,.js}')],
     // migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
     // entities: [join(__dirname, '/entities/**/*{.ts,.js}')],
     // ...(process.env['DB_TYPE'] === 'mysql' ? { connectorPackage: 'mysql2' } : {}),
@@ -22,6 +22,5 @@ export {
     config,
     dataSource
 };
-
 
 export default new DataSource({ ...config });

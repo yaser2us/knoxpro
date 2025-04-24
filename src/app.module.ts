@@ -1,21 +1,23 @@
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { JsonApiModule, TypeOrmJsonApiModule } from 'json-api-nestjs';
-import {
-  // Users,
-  // Addresses,
-  // Comments,
-  // Roles,
-  // BookList,
-  User,
-  UserRole,
-  Role,
-  Tenant,
-  Permission,
-  AuditLog,
-  TenantSetting,
-} from './Entity';
+// import {
+//   // Users,
+//   // Addresses,
+//   // Comments,
+//   // Roles,
+//   // BookList,
+//   User,
+//   UserRole,
+//   Role,
+//   Tenant,
+//   Permission,
+//   AuditLog,
+//   TenantSetting,
+// } from './Entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -40,7 +42,23 @@ import { AccessControlInterceptor } from './common/interceptors/access.control.i
 import dataSource, { config } from './database';
 
 import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
+import { PulseInterceptor } from "./pulse/pulse.interceptor";
 
+import {
+  AccessAction,
+  AccessEvent,
+  ResourceAction,
+  ResourceType,
+  Role,
+  RolePermission,
+  User,
+  UserRole,
+  Workspace,
+} from "./pulse/entity"
+
+import { PulseModule } from './pulse/pulse.module';
+
+import { Document } from './Entity/document.entity';
 // const config: DataSourceOptions = {
 //   type: 'postgres', //process.env['DB_TYPE'] as 'postgres' | 'postgres',
 //   host: "localhost", // process.env['DB_HOST'],
@@ -61,9 +79,11 @@ import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     SecurityModule,
+    PulseModule,
     // CacheModule.register({
     //   ttl: 3600, // Cache expiration time in seconds (1 hour)
     //   max: 1000, // Maximum items in cache
@@ -110,13 +130,23 @@ import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
         // Comments,
         // BookList,
         // Roles,
+        // User,
+        // UserRole,
+        // Role,
+        // Tenant,
+        // Permission,
+        // AuditLog,
+        // TenantSetting,
         User,
-        UserRole,
+        Workspace,
         Role,
-        Tenant,
-        Permission,
-        AuditLog,
-        TenantSetting,
+        UserRole,
+        ResourceType,
+        ResourceAction,
+        RolePermission,
+        AccessAction,     // ✅ Add this
+        AccessEvent,       // ✅ And this
+        Document
       ],
       // controllers: [ExtendUserController],
       // providers: [YourEntityRepository],
@@ -144,11 +174,18 @@ import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: AccessControlInterceptor, // ✅ Register interceptor globally
+    // },
+
     {
       provide: APP_INTERCEPTOR,
-      useClass: AccessControlInterceptor, // ✅ Register interceptor globally
+      useClass: PulseInterceptor, // ✅ Register interceptor globally
     },
   ],
-  // exports: [YourEntityRepository], // Export if needed in other modules
+  exports: [
+    // YourEntityRepository,
+  ], // Export if needed in other modules
 })
 export class AppModule { }

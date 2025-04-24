@@ -1,0 +1,15 @@
+[
+    "/api/auth/login",
+    "/api/auth/register",
+    "/auth/refresh-token",
+    "/health",
+    "/status",
+    "/docs",
+    "/openapi",
+    "/api/upload/donation",
+    "/api/pulse/access-insight",
+    "/api/pulse/access-grants",
+    "/api/pulse/access-grants/grouped",
+    "/api/pulse/access-grants/resource/grouped",
+    "/api/pulse/simulate-access"
+]
