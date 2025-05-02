@@ -20,7 +20,7 @@ import { JsonApiModule, TypeOrmJsonApiModule } from 'json-api-nestjs';
 // } from './Entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions, EntitySchema } from 'typeorm';
 import { join } from 'path';
 import * as process from 'process';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -43,6 +43,7 @@ import dataSource, { config } from './database';
 
 import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
 import { PulseInterceptor } from "./pulse/pulse.interceptor";
+import { ZoiModule } from './zoi/zoi.module';
 
 import {
   AccessAction,
@@ -57,8 +58,10 @@ import {
 } from "./pulse/entity"
 
 import { PulseModule } from './pulse/pulse.module';
-
-import { Document } from './Entity/document.entity';
+//
+import { Document, DocumentAttachment, DocumentFlow, DocumentSignature, DocumentTemplate, FlowTemplate } from './zoi/entity';
+import { DynamicEntityRegistry } from './zoi/dynamic.entity.registry';
+import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
 // const config: DataSourceOptions = {
 //   type: 'postgres', //process.env['DB_TYPE'] as 'postgres' | 'postgres',
 //   host: "localhost", // process.env['DB_HOST'],
@@ -75,7 +78,22 @@ import { Document } from './Entity/document.entity';
 
 // const dataSource = new DataSource({ ...config });
 
-
+  const entities: (Function | EntitySchema)[] = [
+        User,
+        Workspace,
+        Role,
+        UserRole,
+        ResourceType,
+        ResourceAction,
+        RolePermission,
+        AccessAction,
+        AccessEvent,
+        Document,
+        DocumentAttachment,
+        DocumentFlow,
+        DocumentSignature,
+        DocumentTemplate
+    ];
 
 @Module({
   imports: [
@@ -84,6 +102,7 @@ import { Document } from './Entity/document.entity';
     UsersModule,
     SecurityModule,
     PulseModule,
+    ZoiModule,
     // CacheModule.register({
     //   ttl: 3600, // Cache expiration time in seconds (1 hour)
     //   max: 1000, // Maximum items in cache
@@ -122,21 +141,10 @@ import { Document } from './Entity/document.entity';
       autoLoadEntities: true,
       logging: true,
     }),
+    // ZoiDynamicJsonApiModule.forRootAsync(),
     JsonApiModule.forRoot(TypeOrmJsonApiModule, {
       ...dataSource,
       entities: [
-        // Users,
-        // Addresses,
-        // Comments,
-        // BookList,
-        // Roles,
-        // User,
-        // UserRole,
-        // Role,
-        // Tenant,
-        // Permission,
-        // AuditLog,
-        // TenantSetting,
         User,
         Workspace,
         Role,
@@ -146,7 +154,12 @@ import { Document } from './Entity/document.entity';
         RolePermission,
         AccessAction,     // ✅ Add this
         AccessEvent,       // ✅ And this
-        Document
+        Document,
+        DocumentAttachment, 
+        DocumentFlow, 
+        DocumentSignature, 
+        DocumentTemplate,
+        FlowTemplate
       ],
       // controllers: [ExtendUserController],
       // providers: [YourEntityRepository],

@@ -11,5 +11,12 @@
     "/api/pulse/access-grants",
     "/api/pulse/access-grants/grouped",
     "/api/pulse/access-grants/resource/grouped",
-    "/api/pulse/simulate-access"
+    "/api/pulse/simulate-access",
+    "/api/zoi",
+    "/api/Workspace",
+    "/api/object",
+    "/api/nasser",
+    "/api/flow-template",
+    "/api/document",
+    "/api/workspace"
 ]

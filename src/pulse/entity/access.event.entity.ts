@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn, JoinColumn } from 'typeorm';
 import { AccessAction } from './access.action.entity';
-import { User } from './user.entity';
+import { User } from '../../core/entity/user.entity';
 
 @Entity('access_events')
 export class AccessEvent {

@@ -7,7 +7,7 @@ import {
     ManyToOne,
     JoinColumn,
 } from 'typeorm';
-import { Workspace } from './workspace.entity';
+import { Workspace } from '../../core/entity/workspace.entity';
 
 // @Entity('access_policies')
 // export class AccessPolicy {

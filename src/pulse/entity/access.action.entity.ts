@@ -7,7 +7,7 @@
     UpdateDateColumn,
     JoinColumn
 } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../../core/entity/user.entity';
 
 @Entity('access_actions')
 export class AccessAction {

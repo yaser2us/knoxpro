@@ -9,7 +9,11 @@ const config: DataSourceOptions = {
     password: "Odenza@2025", //process.env['DB_PASSWORD'],
     database: "yasser", //process.env['DB_NAME'],
     logging: 'all', //process.env['DB_LOGGING'] === '1',
-    entities: [join(__dirname, '/pulse/entity/*{.ts,.js}')],
+    entities: [
+        join(__dirname, '/pulse/entity/*{.ts,.js}'), 
+        join(__dirname, '/zoi/entity/*{.ts,.js}'),
+        join(__dirname, '/core/entity/*{.ts,.js}'),
+    ],
     // migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
     // entities: [join(__dirname, '/entities/**/*{.ts,.js}')],
     // ...(process.env['DB_TYPE'] === 'mysql' ? { connectorPackage: 'mysql2' } : {}),

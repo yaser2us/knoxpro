@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { UserRole } from './user.role.entity';
-import { AccessAction } from './access.action.entity';
+import { UserRole } from '../../pulse/entity/user.role.entity';
+import { AccessAction } from '../../pulse/entity/access.action.entity';
 
 @Entity('users')
 export class User {

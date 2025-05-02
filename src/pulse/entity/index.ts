@@ -5,9 +5,9 @@ import { ResourceAction } from "./resource.action.entity";
 import { ResourceType } from "./resource.type.entity";
 import { Role } from "./role.entity";
 import { RolePermission } from "./role.permission.entity";
-import { User } from "./user.entity";
+import { User } from "../../core/entity/user.entity";
 import { UserRole } from "./user.role.entity";
-import { Workspace } from "./workspace.entity";
+import { Workspace } from "../../core/entity/workspace.entity";
 
 export {
     AccessAction,
