@@ -21,6 +21,10 @@ import { ZoiEntityLoaderService } from './ZoiEntityLoaderService';
 import { DataSource } from 'typeorm';
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmOptions } from 'json-api-nestjs/src/lib/types';
+import { WorkflowTemplate } from './entity/workflow.template.entity';
+import { WorkflowRun } from './entity/workflow.run.entity';
+import { WorkflowLog } from './entity/workflow.log.entity';
+import { UUIDValidationPipe } from 'src/common/pipe/uuid.pipe';
 
 const entities = [
     User,
@@ -37,7 +41,10 @@ const entities = [
     DocumentFlow,
     DocumentSignature,
     DocumentTemplate,
-    FlowTemplate
+    FlowTemplate,
+    WorkflowTemplate,
+    WorkflowRun,
+    WorkflowLog,
 ];
 
 @Module({})
@@ -48,7 +55,7 @@ export class ZoiDynamicJsonApiModule {
             entities: [
                 ...entities
             ],   // only need DocumentTemplate here
-          });
+        });
         await bootstrapDS.initialize();    // this must be called!
         const loader = new ZoiEntityLoaderService(bootstrapDS);
         const dynamic = await loader.loadAll();
@@ -74,7 +81,11 @@ export class ZoiDynamicJsonApiModule {
                 //             DocumentTemplate]
                 // ),
                 // NOW call json-api with a factory that includes dynamic entities
-                TypeOrmModule.forFeature([DocumentTemplate]), // ✅ register the repo for DI
+                TypeOrmModule.forFeature([
+                    DocumentTemplate,
+                    WorkflowTemplate,
+                    WorkflowRun,
+                    WorkflowLog,]), // ✅ register the repo for DI
                 JsonApiModule.forRoot(TypeOrmJsonApiModule, {
                     ...dataSource,
                     entities: [
@@ -93,13 +104,16 @@ export class ZoiDynamicJsonApiModule {
                         DocumentSignature,
                         DocumentTemplate,
                         FlowTemplate,
+                        WorkflowTemplate,
+                        WorkflowRun,
+                        WorkflowLog,
                         ...dynamic
                     ],
                     options: {
                         debug: true,
                         requiredSelectField: false,
                         operationUrl: 'operation',
-                        // pipeForId: UUIDValidationPipe
+                        pipeForId: UUIDValidationPipe
                     },
                 }),
             ],

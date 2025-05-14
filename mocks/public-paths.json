@@ -17,6 +17,8 @@
     "/api/object",
     "/api/nasser",
     "/api/flow-template",
+    "/api/flow-template/:id",
     "/api/document",
-    "/api/workspace"
+    "/api/workspace",
+    "/api/workflow-template"
 ]

@@ -1,105 +1,166 @@
-// src/zoi/engine/zoi-flow.engine.ts
+// zoi-flow.engine.ts
 import { Injectable } from '@nestjs/common';
+import { WorkflowRun } from '../entity/workflow.run.entity';
+import { WorkflowTemplate } from '../entity/workflow.template.entity';
+import { WorkflowLog } from '../entity/workflow.log.entity';
+import { ZoiStepExecutor } from '../zoi.flow.step.executor';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FlowTemplate } from '../entity/flow.template.entity';
-import { Document } from '../entity/document.entity';
-import { DocumentFlow } from '../entity/document.flows.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class ZoiFlowEngine {
-    constructor(
-        @InjectRepository(DocumentFlow)
-        private flowRepo: Repository<DocumentFlow>,
-    ) { }
+  constructor(
+    @InjectRepository(WorkflowRun)
+    private runRepo: Repository<WorkflowRun>,
+    @InjectRepository(WorkflowTemplate)
+    private templateRepo: Repository<WorkflowTemplate>,
+    @InjectRepository(WorkflowLog)
+    private logRepo: Repository<WorkflowLog>,
+    private stepExecutor: ZoiStepExecutor
+  ) { }
 
-    async run(flow: FlowTemplate, document: Document) {
-        const context = {
-            document,
-        };
+  // async run(template: WorkflowTemplate, document: any): Promise<WorkflowRun> {
+  //   const existing = await this.runRepo.findOne({
+  //     where: {
+  //       document_id: document.id,
+  //       template: { id: template.id }
+  //     }
+  //   });
 
-        const rawSteps = flow.steps;
+  //   console.log('[debug] document:', document);
 
-        // Normalize to iterable array
-        const steps: any[] = Array.isArray(rawSteps)
-            ? rawSteps
-            : typeof rawSteps === 'object' && rawSteps !== null
-                ? Object.values(rawSteps)
-                : [];
+  //   if (existing) return existing;
 
-        for (const step of steps) {
-            if (step.if) {
-                const condition = this.evaluateCondition(step.if, context);
-                const selected = condition ? step.then : step.else;
-                await this.executeStep(selected, context);
-                continue;
-            }
+  //   const run = this.runRepo.create({
+  //     document_id: document.id,
+  //     template,
+  //     version: template.version,
+  //     status: 'running',
+  //     current_step_index: 0,
+  //     context: {}
+  //   });
 
-            await this.executeStep(step, context);
-        }
+  //   await this.runRepo.save(run);
 
-        // Optionally save context and status
-        await this.flowRepo.save({
-            document,
-            flowTemplate: flow,
-            stepPointer: 'completed',
-            context,
-            completed: true,
-        });
+  //   await this.logRepo.save(this.logRepo.create({
+  //     workflow_run: run,
+  //     step_index: 0,
+  //     type: 'triggered',
+  //     message: 'Workflow started',
+  //     actor_user_id: null,
+  //     metadata: { template_name: template.name }
+  //   }));
+
+  //   const dsl = typeof template.dsl === 'string' ? JSON.parse(template.dsl) : template.dsl;
+  //   const firstStep = dsl.steps;
+  //   console.log('[debug] firstStep:', firstStep, template.dsl.steps);
+  //   const { shouldPause, updatedContext } = await this.stepExecutor.execute(run, firstStep[0], document);
+
+  //   run.current_step_index = shouldPause ? 0 : 1;
+  //   run.status = shouldPause ? 'waiting' : 'running';
+  //   run.context = updatedContext;
+
+  //   return await this.runRepo.save(run);
+  // }
+
+  async run(template: WorkflowTemplate, document: any): Promise<WorkflowRun> {
+    const existing = await this.runRepo.findOne({
+      where: {
+        document_id: document.id,
+        template: { id: template.id }
+      }
+    });
+
+    if (existing) return existing;
+
+    const run = this.runRepo.create({
+      document_id: document.id,
+      template,
+      version: typeof template.version === 'string' ? template.version : '1.0.0',
+      status: 'running',
+      current_step_index: 0,
+      context: {}
+    });
+
+    await this.runRepo.save(run);
+
+    await this.logRepo.save(this.logRepo.create({
+      workflow_run: run,
+      step_index: 0,
+      type: 'triggered',
+      message: 'Workflow started',
+      actor_user_id: null,
+      metadata: { template_name: template.name }
+    }));
+
+    const dsl = typeof template.dsl === 'string' ? JSON.parse(template.dsl) : template.dsl;
+    const steps = dsl?.steps || [];
+
+    let index = 0;
+    let shouldPause = false;
+    let context = run.context;
+
+    while (index < steps.length && !shouldPause) {
+      const step = steps[index];
+      const result = await this.stepExecutor.execute(run, step, document);
+
+      context = result.updatedContext ?? context;
+      shouldPause = result.shouldPause;
+
+      if (!shouldPause) {
+        index++;
+      }
     }
 
-    private evaluateCondition(condition: any, context: any): boolean {
-        const value = this.getFieldValue(condition.field, context);
+    run.current_step_index = index;
+    run.status = shouldPause ? 'waiting' : 'completed';
+    run.context = context;
 
-        if (condition.equals !== undefined) return value === condition.equals;
-        if (condition.notEquals !== undefined) return value !== condition.notEquals;
-        if (condition.in !== undefined) return condition.in.includes(value);
-        if (condition.exists) return this.getFieldValue(condition.exists, context) !== undefined;
-        if (condition.and) return condition.and.every((c: any) => this.evaluateCondition(c, context));
-        if (condition.or) return condition.or.some((c: any) => this.evaluateCondition(c, context));
+    return await this.runRepo.save(run);
+  }
 
-        return false;
+  private async _executeSteps(
+    run: WorkflowRun,
+    template: WorkflowTemplate,
+    document: any,
+    startIndex: number
+  ): Promise<WorkflowRun> {
+    const dsl = typeof template.dsl === 'string' ? JSON.parse(template.dsl) : template.dsl;
+    const steps = dsl?.steps || [];
+
+    let index = startIndex;
+    let shouldPause = false;
+    let context = run.context;
+
+    while (index < steps.length && !shouldPause) {
+      const step = steps[index];
+      const result = await this.stepExecutor.execute(run, step, document);
+
+      context = result.updatedContext ?? context;
+      shouldPause = result.shouldPause;
+
+      if (!shouldPause) {
+        index++;
+      }
     }
 
-    private getFieldValue(fieldPath: string, context: any): any {
-        return fieldPath.split('.').reduce((acc, key) => acc?.[key], context);
+    run.current_step_index = index;
+    run.status = shouldPause ? 'waiting' : 'completed';
+    run.context = context;
+
+    return run;
+  }
+
+  async resume(run: WorkflowRun, document: any): Promise<WorkflowRun> {
+    if (run.status !== 'waiting') {
+      throw new Error(`WorkflowRun ${run.id} is not paused. Cannot resume.`);
     }
 
-    private async executeStep(step: any, context: any) {
-        switch (step.action) {
-            case 'grant':
-                return this.handleGrant(step, context);
-            case 'sendEmail':
-                return this.handleSendEmail(step, context);
-            case 'waitFor':
-                return this.handleWaitFor(step, context);
-            case 'human':
-                return this.handleHuman(step, context);
-            case 'noop':
-            default:
-                return;
-        }
-    }
+    const template = run.template;
 
-    private async handleGrant(step: any, context: any) {
-        // integrate with your access grant engine
-        console.log('[Zoi] Grant access to', step.to);
-    }
+    const updatedRun = await this._executeSteps(run, template, document, run.current_step_index);
 
-    private async handleSendEmail(step: any, context: any) {
-        // integrate with email engine
-        console.log('[Zoi] Send email to', this.getFieldValue(step.to, context));
-    }
+    return await this.runRepo.save(updatedRun);
+  }
 
-    private async handleWaitFor(step: any, context: any) {
-        // simulate condition waiting (in real life, this is event-based)
-        console.log('[Zoi] Wait for condition...');
-    }
-
-    private async handleHuman(step: any, context: any) {
-        // record need for user decision
-        console.log('[Zoi] Human decision needed:', step);
-        // store contextKey placeholder
-        context[step.contextKey] = null;
-    }
 }

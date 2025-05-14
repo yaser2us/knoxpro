@@ -13,6 +13,9 @@ import {
 } from "../pulse/entity"
 
 import { Document, DocumentAttachment, DocumentFlow, DocumentSignature, DocumentTemplate, FlowTemplate } from '../zoi/entity';
+import { WorkflowTemplate } from './entity/workflow.template.entity';
+import { WorkflowRun } from './entity/workflow.run.entity';
+import { WorkflowLog } from './entity/workflow.log.entity';
 
 
 export class DynamicEntityRegistry {
@@ -32,7 +35,10 @@ export class DynamicEntityRegistry {
         DocumentFlow,
         DocumentSignature,
         DocumentTemplate,
-        FlowTemplate
+        FlowTemplate,
+        WorkflowTemplate,
+        WorkflowRun,
+        WorkflowLog
     ];
 
     static register(entity: EntitySchema) {

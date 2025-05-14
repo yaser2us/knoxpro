@@ -62,6 +62,7 @@ import { PulseModule } from './pulse/pulse.module';
 import { Document, DocumentAttachment, DocumentFlow, DocumentSignature, DocumentTemplate, FlowTemplate } from './zoi/entity';
 import { DynamicEntityRegistry } from './zoi/dynamic.entity.registry';
 import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
+import { ZoiDocumentInterceptor } from './zoi/zoi.document.interceptor';
 // const config: DataSourceOptions = {
 //   type: 'postgres', //process.env['DB_TYPE'] as 'postgres' | 'postgres',
 //   host: "localhost", // process.env['DB_HOST'],
@@ -196,6 +197,10 @@ import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
       provide: APP_INTERCEPTOR,
       useClass: PulseInterceptor, // ✅ Register interceptor globally
     },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ZoiDocumentInterceptor
+    // }
   ],
   exports: [
     // YourEntityRepository,

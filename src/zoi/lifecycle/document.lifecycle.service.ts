@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Document } from '../entity/document.entity';
 import { FlowTemplate } from '../entity/flow.template.entity';
+import { WorkflowTemplate } from '../entity/workflow.template.entity';
 import { ZoiFlowEngine } from '../engine/zoi.flow.engine';
 
 @Injectable()
@@ -11,8 +12,8 @@ export class DocumentLifecycleService implements OnModuleInit {
     constructor(
         @InjectRepository(Document)
         private readonly docRepo: Repository<Document>,
-        @InjectRepository(FlowTemplate)
-        private readonly flowRepo: Repository<FlowTemplate>,
+        @InjectRepository(WorkflowTemplate)
+        private readonly flowRepo: Repository<WorkflowTemplate>,
         private readonly flowEngine: ZoiFlowEngine,
     ) { }
 
@@ -23,8 +24,8 @@ export class DocumentLifecycleService implements OnModuleInit {
     async onDocumentCreated(document: Document) {
         const template = await this.flowRepo.findOne({
             where: {
-                appliesTo: document.type,
-                trigger: 'document.created',
+                // appliesTo: document.type,
+                // trigger: 'document.created',
             },
         });
 

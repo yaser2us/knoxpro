@@ -11,9 +11,84 @@ import { Request } from 'express';
 import { PulseAccessService } from './pulse-access.service';
 import * as fs from 'fs';
 import * as path from 'path';
+import { pathToRegexp, match }  from 'path-to-regexp';
 //
+
+type WhitelistRule = {
+  method: string;        // 'GET' | 'POST' | 'PUT' | ...
+  path: string;          // e.g., '/api/flow-template/:id'
+  matcher: ReturnType<typeof match>; // compiled matcher
+};
+
+export const rawWhitelistPaths: Omit<WhitelistRule, 'matcher'>[] = [
+  { method: 'POST', path: '/api/auth/login' },
+  { method: 'POST', path: '/api/auth/register' },
+  { method: 'POST', path: '/auth/refresh-token' },
+
+  { method: 'GET', path: '/health' },
+  { method: 'GET', path: '/status' },
+  { method: 'GET', path: '/docs' },
+  { method: 'GET', path: '/openapi' },
+
+  { method: 'POST', path: '/api/upload/donation' },
+
+  { method: 'GET', path: '/api/pulse/access-insight' },
+  { method: 'GET', path: '/api/pulse/access-grants' },
+  { method: 'GET', path: '/api/pulse/access-grants/grouped' },
+  { method: 'GET', path: '/api/pulse/access-grants/resource/grouped' },
+  { method: 'POST', path: '/api/pulse/simulate-access' },
+
+  { method: 'ALL', path: '/api/zoi' },
+  { method: 'ALL', path: '/api/Workspace' },
+  { method: 'ALL', path: '/api/object' },
+  { method: 'ALL', path: '/api/nasser' },
+  { method: 'PATCH', path: '/api/nasser/:id' },
+  
+  { method: 'GET', path: '/api/user' },
+  { method: 'GET', path: '/api/user/:id' },
+
+  { method: 'GET', path: '/api/flow-template' },
+  { method: 'POST', path: '/api/flow-template' },
+  { method: 'GET', path: '/api/flow-template/:id' },
+
+  { method: 'GET', path: '/api/document' },
+  { method: 'GET', path: '/api/document/:id' },
+
+  { method: 'GET', path: '/api/workspace' },
+  { method: 'GET', path: '/api/workspace/:id' },
+
+  { method: 'GET', path: '/api/workflow-template' },
+  { method: 'GET', path: '/api/workflow-template/:id' },
+  { method: 'POST', path: '/api/workflow-template' },
+
+];
+
+
 const publicPathFile = path.resolve('mocks/public-paths.json');
 const PUBLIC_PATHS = new Set<string>(JSON.parse(fs.readFileSync(publicPathFile, 'utf-8')));
+
+export const WHITELIST_RULES: WhitelistRule[] = rawWhitelistPaths.map((rule) => ({
+  ...rule,
+  matcher: match(rule.path, { decode: decodeURIComponent }),
+}));
+
+const WHITELIST_PATTERNS = WHITELIST_RULES.map((rule) => ({
+  method: rule.method.toUpperCase(),
+  regexp: pathToRegexp(rule.path),
+}));
+
+// Create matcher functions at startup
+for (const rule of WHITELIST_RULES) {
+  rule.matcher = match(rule.path, { decode: decodeURIComponent });
+}
+
+export function isWhitelisted(reqMethod: string, reqPath: string): boolean {
+  return WHITELIST_RULES.some((rule) => {
+    const methodMatches = rule.method === 'ALL' || rule.method === reqMethod;
+    const pathMatches = rule.matcher(reqPath) !== false;
+    return methodMatches && pathMatches;
+  });
+}
 
 function mapHttpMethodToAction(method: string): string {
   switch (method.toUpperCase()) {
@@ -49,7 +124,11 @@ export class PulseInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest();
     const { user = {} } = req;
 
-    if (PUBLIC_PATHS.has(req.path)) return next.handle();
+    if (isWhitelisted(req.method, req.path)) {
+      return next.handle();
+    }
+
+    // if (PUBLIC_PATHS.has(req.path)) return next.handle();
 
     if (!user) throw new ForbiddenException('Unauthorized user');
 
