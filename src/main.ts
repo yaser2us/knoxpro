@@ -5,6 +5,9 @@ import { ZoiBootstrapService } from './zoi/zoi.bootstrap.service';
 import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
+import { winstonConfig } from './common/logger/logger.config';
+
 import { config } from './database';
 import { JsonNormalizerPipe } from './common/pipe/json.normalizer.pipe';
 
@@ -36,7 +39,12 @@ async function bootstrap() {
   class RootModule {}
 
 
-  const app = await NestFactory.create(RootModule);
+  const app = await NestFactory.create(RootModule, {
+    logger: WinstonModule.createLogger(winstonConfig),
+  });
+
+//   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
   const globalPrefix = 'api';
   // Enable CORS
   app.enableCors({

@@ -4,7 +4,7 @@ export class GrantAccessStep {
         const to = resolveTarget(config.to, document);
         const permissions = config.permissions;
 
-        console.log(`[Zoi] Granting ${permissions.join(', ')} to ${to} for doc ${document.id}`);
+        console.log(`[Zoi] [GrantAccessStep] Granting ${permissions.join(', ')} to ${to} for doc ${document.id}`);
         return { shouldPause: false };
     }
 }

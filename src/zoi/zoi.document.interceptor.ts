@@ -87,13 +87,19 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
                         : typeof template.triggers === 'string'
                             ? JSON.parse(template.triggers)
                             : [template.triggers];
-
-                    const shouldTrigger = triggers.some(trig =>
-                        trig.event === eventType &&
-                        this.matchConditions(trig.conditions, document)
+//
+                    const shouldTrigger = triggers.some(trig => {
+                        console.log(`[Zoi] 1 Checking workflow condition`, trig.conditions, eventType, trig.event)
+                        console.log(`[Zoi] 2 Checking workflow condition eventType`, trig.event === eventType)
+                        console.log(`[Zoi] 3 Checking workflow condition matchConditions`, this.matchConditions(trig.conditions, document))
+                        return trig.event === eventType &&
+                            this.matchConditions(trig.conditions, document)
+                    }
                     );
 
-                    console.log(`[Zoi] Checking workflow '${template.name}' for document ${document.id}: ${shouldTrigger}`);
+                    console.log(`[Zoi] 4 Checking workflow '${template.name}' for document ${document.id}: ${shouldTrigger}`);
+
+
 
                     if (!shouldTrigger) continue;
 
@@ -110,8 +116,10 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
                             relations: ['template']
                         });
 
+                        console.log(`[Zoi] -1 run Resuming workflow ${template.name} on document ${document.id}`, run);
+
                         if (run) {
-                            console.log(`[Zoi] Resuming workflow ${template.name} on document ${document.id}`);
+                            console.log(`[Zoi] 0000 run Resuming workflow ${template.name} on document ${document.id}`);
                             await this.zoiFlowEngine.resume(run, document);
                         }
                     }
@@ -123,13 +131,15 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
 
     private matchConditions(conditions: any, document: any): boolean {
         if (!conditions) return true;
+        console.log('[Zoi] 5 Matching conditions:', conditions, document);
 
         try {
             return Object.entries(conditions).every(([key, val]) => {
-                const value = key.split('.').reduce((acc, k) => acc?.[k], document);
+                const value = key.split('.').reduce((acc, k) => acc?.[k], {document: { ...document}});
                 if (typeof val === 'object' && val !== null && '$in' in val && Array.isArray((val as any).$in)) {
                     return (val as any).$in.includes(value);
                 }
+                console.log('[Zoi] 6 Matching condition:', key, value, val);
                 return value === val;
             });
         } catch (e) {

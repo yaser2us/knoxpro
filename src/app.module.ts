@@ -79,25 +79,34 @@ import { ZoiDocumentInterceptor } from './zoi/zoi.document.interceptor';
 
 // const dataSource = new DataSource({ ...config });
 
-  const entities: (Function | EntitySchema)[] = [
-        User,
-        Workspace,
-        Role,
-        UserRole,
-        ResourceType,
-        ResourceAction,
-        RolePermission,
-        AccessAction,
-        AccessEvent,
-        Document,
-        DocumentAttachment,
-        DocumentFlow,
-        DocumentSignature,
-        DocumentTemplate
-    ];
+import { WinstonLoggerService } from './common/logger/winston-logger.service';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import { winstonConfig } from './common/logger/logger.config';
+import { LoggerModule } from './common/logger/logger.module';
+import { YasserNasser } from './core/entity';
+const entities: (Function | EntitySchema)[] = [
+  User,
+  Workspace,
+  Role,
+  UserRole,
+  ResourceType,
+  ResourceAction,
+  RolePermission,
+  AccessAction,
+  AccessEvent,
+  Document,
+  DocumentAttachment,
+  DocumentFlow,
+  DocumentSignature,
+  DocumentTemplate
+];
 
 @Module({
   imports: [
+    WinstonModule.forRoot(winstonConfig),
+    LoggerModule,
     EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
@@ -148,6 +157,7 @@ import { ZoiDocumentInterceptor } from './zoi/zoi.document.interceptor';
       entities: [
         User,
         Workspace,
+        YasserNasser,
         Role,
         UserRole,
         ResourceType,
@@ -156,9 +166,9 @@ import { ZoiDocumentInterceptor } from './zoi/zoi.document.interceptor';
         AccessAction,     // ✅ Add this
         AccessEvent,       // ✅ And this
         Document,
-        DocumentAttachment, 
-        DocumentFlow, 
-        DocumentSignature, 
+        DocumentAttachment,
+        DocumentFlow,
+        DocumentSignature,
         DocumentTemplate,
         FlowTemplate
       ],
@@ -193,10 +203,14 @@ import { ZoiDocumentInterceptor } from './zoi/zoi.document.interceptor';
     //   useClass: AccessControlInterceptor, // ✅ Register interceptor globally
     // },
 
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: PulseInterceptor, // ✅ Register interceptor globally
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: PulseInterceptor, // ✅ Register interceptor globally
+    // },
+    // {
+    //   provide: 'WinstonLoggerService',
+    //   useClass: WinstonLoggerService
+    // }
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: ZoiDocumentInterceptor
