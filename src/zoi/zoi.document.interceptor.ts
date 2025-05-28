@@ -27,6 +27,8 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
         const method = request.method;
         const eventType = method === 'POST' ? 'document.created' : method === 'PATCH' ? 'document.updated' : null;
 
+        const resourceType = request.body.data.type || null;
+
         return next.handle().pipe(
             // tap(async (responseBody) => {
             //   if (!eventType) return;
@@ -65,19 +67,24 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
             // inside intercept()
             tap(async (responseBody) => {
                 const method = request.method;
-                const eventType = method === 'POST' ? 'document.created'
-                    : method === 'PATCH' ? 'document.updated'
-                        : null;
 
-                if (!eventType) return;
 
                 const payload = responseBody?.data;
                 if (!payload || !payload.id || !payload.attributes) return;
 
                 const document = {
                     id: payload.id,
-                    ...payload.attributes
+                    ...payload.attributes,
+                    type: resourceType
                 };
+
+                const eventType = method === 'POST' ? `document.${document.type}.created`
+                    : method === 'PATCH' ? `document.${document.type}.updated`
+                        : null;
+                console.log(`[Zoi] 0 Checking eventType`, eventType, document, request.body.data.type)
+
+
+                if (!eventType) return;
 
                 const allTemplates = await this.templateRepo.find({ where: { is_active: true } });
 
@@ -87,10 +94,11 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
                         : typeof template.triggers === 'string'
                             ? JSON.parse(template.triggers)
                             : [template.triggers];
-//
+                    //
                     const shouldTrigger = triggers.some(trig => {
                         console.log(`[Zoi] 1 Checking workflow condition`, trig.conditions, eventType, trig.event)
                         console.log(`[Zoi] 2 Checking workflow condition eventType`, trig.event === eventType)
+                        console.log(`[Zoi] 2 - 1 Checking workflow condition trig.event`, eventType)
                         console.log(`[Zoi] 3 Checking workflow condition matchConditions`, this.matchConditions(trig.conditions, document))
                         return trig.event === eventType &&
                             this.matchConditions(trig.conditions, document)
@@ -103,7 +111,7 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
 
                     if (!shouldTrigger) continue;
 
-                    if (eventType === 'document.created') {
+                    if (eventType === `document.${document.type}.created`) {
                         await this.zoiFlowEngine.run(template, document);
                     } else {
                         // Try to resume existing run
@@ -135,11 +143,13 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
 
         try {
             return Object.entries(conditions).every(([key, val]) => {
-                const value = key.split('.').reduce((acc, k) => acc?.[k], {document: { ...document}});
+                const value = key.split('.').reduce((acc, k) => acc?.[k], { document: { ...document } });
                 if (typeof val === 'object' && val !== null && '$in' in val && Array.isArray((val as any).$in)) {
                     return (val as any).$in.includes(value);
                 }
                 console.log('[Zoi] 6 Matching condition:', key, value, val);
+                console.log('[Zoi] 7 Matching condition result:', value === val);
+
                 return value === val;
             });
         } catch (e) {
