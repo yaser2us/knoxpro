@@ -86,6 +86,7 @@ import * as winston from 'winston';
 import { winstonConfig } from './common/logger/logger.config';
 import { LoggerModule } from './common/logger/logger.module';
 import { YasserNasser } from './core/entity';
+import { School } from './core/entity/school.entity';
 const entities: (Function | EntitySchema)[] = [
   User,
   Workspace,
@@ -155,6 +156,7 @@ const entities: (Function | EntitySchema)[] = [
     JsonApiModule.forRoot(TypeOrmJsonApiModule, {
       ...dataSource,
       entities: [
+        School,
         User,
         Workspace,
         YasserNasser,
@@ -203,10 +205,10 @@ const entities: (Function | EntitySchema)[] = [
     //   useClass: AccessControlInterceptor, // ✅ Register interceptor globally
     // },
 
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: PulseInterceptor, // ✅ Register interceptor globally
-    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: PulseInterceptor, // ✅ Register interceptor globally
+    },
     // {
     //   provide: 'WinstonLoggerService',
     //   useClass: WinstonLoggerService

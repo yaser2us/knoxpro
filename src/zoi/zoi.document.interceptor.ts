@@ -27,7 +27,7 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
         const method = request.method;
         const eventType = method === 'POST' ? 'document.created' : method === 'PATCH' ? 'document.updated' : null;
 
-        const resourceType = request.body.data.type || null;
+        const resourceType = request?.body?.data?.type || null;
 
         return next.handle().pipe(
             // tap(async (responseBody) => {
@@ -81,7 +81,7 @@ export class ZoiDocumentInterceptor implements NestInterceptor {
                 const eventType = method === 'POST' ? `document.${document.type}.created`
                     : method === 'PATCH' ? `document.${document.type}.updated`
                         : null;
-                console.log(`[Zoi] 0 Checking eventType`, eventType, document, request.body.data.type)
+                console.log(`[Zoi] 0 Checking eventType`, eventType, document, request?.body?.data?.type)
 
 
                 if (!eventType) return;

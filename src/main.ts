@@ -7,6 +7,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
 import { winstonConfig } from './common/logger/logger.config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { writeFileSync } from 'fs';
+import * as yaml from 'js-yaml';
 
 import { config } from './database';
 import { JsonNormalizerPipe } from './common/pipe/json.normalizer.pipe';
@@ -22,101 +25,120 @@ import { JsonNormalizerPipe } from './common/pipe/json.normalizer.pipe';
 
 async function bootstrap() {
 
-  // const zoiJsonApi = await ZoiDynamicJsonApiModule.forRootAsync();
+    // const zoiJsonApi = await ZoiDynamicJsonApiModule.forRootAsync();
 
-  @Module({
-    imports: [
-      // TypeOrmModule.forRoot({
-      //   ...config,
-      //   synchronize: true,
-      //   autoLoadEntities: true,
-      //   logging: true,
-      // }),
-      AppModule,
-      ZoiDynamicJsonApiModule.forRootAsync(),
-    ],
-  })
-  class RootModule {}
+    @Module({
+        imports: [
+            // TypeOrmModule.forRoot({
+            //   ...config,
+            //   synchronize: true,
+            //   autoLoadEntities: true,
+            //   logging: true,
+            // }),
+            AppModule,
+            ZoiDynamicJsonApiModule.forRootAsync(),
+        ],
+    })
+    class RootModule { }
 
 
-  const app = await NestFactory.create(RootModule, {
-    logger: WinstonModule.createLogger(winstonConfig),
-  });
+    const app = await NestFactory.create(RootModule, {
+        logger: WinstonModule.createLogger(winstonConfig),
+    });
 
-//   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+    //   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
-  const globalPrefix = 'api';
-  // Enable CORS
-  app.enableCors({
-    origin: ['http://localhost:3000', 'https://example.com'],
-    // allowCredentials: true,
-  });
+    const globalPrefix = 'api';
+    // Enable CORS
+    app.enableCors({
+        origin: ['http://localhost:3000', 'https://example.com', 'https://playbox-git-features-newlookhi-yasser-batoies-projects.vercel.app'],
+        // allowCredentials: true,
+    });
 
-  // Register global pipe to normalize JSON fields
-  // app.useGlobalPipes(new JsonNormalizerPipe());
+    // Register global pipe to normalize JSON fields
+    // app.useGlobalPipes(new JsonNormalizerPipe());
 
-  const d =  [
-    {
-        "id": "grant_owner",
-        "action": "grant",
-        "to": [
-            {
-                "who": "user",
-                "from": "document.owner"
-            }
-        ]
-    },
-    {
-        "id": "grant_trainers",
-        "action": "grant",
-        "to": [
-            {
-                "who": "user",
-                "from": "document.meta.trainerEmail"
-            },
-            {
-                "who": "user",
-                "from": "document.meta.auditorEmail"
-            }
-        ]
-    },
-    {
-        "id": "send_email_submit",
-        "action": "sendEmail",
-        "to": "document.owner",
-        "template": "form-submitted"
-    },
-    {
-        "id": "wait_signature",
-        "action": "waitFor",
-        "condition": {
-            "and": [
+    const d = [
+        {
+            "id": "grant_owner",
+            "action": "grant",
+            "to": [
                 {
-                    "signedBy": "document.meta.trainerEmail"
-                },
-                {
-                    "signedBy": "document.meta.auditorEmail"
+                    "who": "user",
+                    "from": "document.owner"
                 }
             ]
+        },
+        {
+            "id": "grant_trainers",
+            "action": "grant",
+            "to": [
+                {
+                    "who": "user",
+                    "from": "document.meta.trainerEmail"
+                },
+                {
+                    "who": "user",
+                    "from": "document.meta.auditorEmail"
+                }
+            ]
+        },
+        {
+            "id": "send_email_submit",
+            "action": "sendEmail",
+            "to": "document.owner",
+            "template": "form-submitted"
+        },
+        {
+            "id": "wait_signature",
+            "action": "waitFor",
+            "condition": {
+                "and": [
+                    {
+                        "signedBy": "document.meta.trainerEmail"
+                    },
+                    {
+                        "signedBy": "document.meta.auditorEmail"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "send_email_ready",
+            "action": "sendEmail",
+            "to": "document.owner",
+            "template": "result-ready"
         }
-    },
-    {
-        "id": "send_email_ready",
-        "action": "sendEmail",
-        "to": "document.owner",
-        "template": "result-ready"
-    }
-]
+    ]
 
-console.log('[transform]', JSON.stringify(d))
+    console.log('[transform]', JSON.stringify(d))
 
-  app.setGlobalPrefix(globalPrefix);
-  // app.useGlobalInterceptors(new AccessControlInterceptor(new Reflector()));
+    app.setGlobalPrefix(globalPrefix);
+    // app.useGlobalInterceptors(new AccessControlInterceptor(new Reflector()));
 
-  const zoiBootstrap = app.get(ZoiBootstrapService);
+    const config = new DocumentBuilder()
+        .setOpenAPIVersion('3.1.1')
+        .setTitle('Knox pro')
+        .setDescription('joy of engineering ;) thanks Allah.')
+        .setVersion('1.0')
+        .build();
+    // app.set('query parser', 'extended');
 
-  await zoiBootstrap.bootstrap();
+    const document = SwaggerModule.createDocument(app, config);
 
-  await app.listen(process.env.PORT ?? 3030);
+    SwaggerModule.setup(
+        'swagger',
+        app,
+        document,
+        {}
+    );
+
+    writeFileSync('./openapi-spec.yaml', yaml.dump(document));
+
+    const zoiBootstrap = app.get(ZoiBootstrapService);
+
+    await zoiBootstrap.bootstrap();
+
+    await app.listen(process.env.PORT ?? 3030);
 }
 bootstrap();

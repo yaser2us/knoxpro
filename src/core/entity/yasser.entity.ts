@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, BeforeInsert } from 'typeorm';
+import { Entity, ManyToOne, Column, PrimaryColumn, BeforeInsert } from 'typeorm';
 // import { nanoid } from 'nanoid';
-
+import { School } from './school.entity';
 @Entity('yassernasser')
 export class YasserNasser {
     @PrimaryColumn() // 👈 This allows you to assign the ID manually
@@ -12,9 +12,11 @@ export class YasserNasser {
     @Column({ type: 'jsonb', nullable: true })
     metadata: Record<string, any>;
 
-    @BeforeInsert()
-    generateId() {
-        this.id = "2" // this.id || `ws_${nanoid()}`;
-    }
+    @ManyToOne(() => School, school => school.YasserNasser, { eager: true })
+    school: School;
+    // @BeforeInsert()
+    // generateId() {
+    //     this.id = "2" // this.id || `ws_${nanoid()}`;
+    // }
 }
 //

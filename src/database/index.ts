@@ -6,7 +6,7 @@ const config: DataSourceOptions = {
     host: "localhost", // process.env['DB_HOST'],
     port: 5432, //parseInt(`${process.env['DB_PORT']}`, 5432),
     username: "postgres", //process.env['DB_USERNAME'],
-    password: "Odenza@2025", //process.env['DB_PASSWORD'],
+    password: "new_password", //process.env['DB_PASSWORD'],
     database: "yasser", //process.env['DB_NAME'],
     logging: 'all', //process.env['DB_LOGGING'] === '1',
     entities: [

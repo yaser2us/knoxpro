@@ -1,0 +1,1846 @@
+openapi: 3.1.1
+paths:
+  /api:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_0
+        - App
+  /api/public-key:
+    get:
+      operationId: AppController_getPublicKey
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+  /api/decrypt:
+    post:
+      operationId: AppController_decryptData
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_0
+  /api/upload/{resource}:
+    post:
+      operationId: AppController_uploadFile
+      parameters:
+        - name: resource
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: ''
+      tags: *ref_0
+  /api/auth/signin:
+    post:
+      operationId: AuthController_signIn
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_1
+        - Auth
+  /api/auth/profile:
+    get:
+      operationId: AuthController_getProfile
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+  /api/auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_1
+  /api/security/init:
+    get:
+      operationId: SecurityController_getPublicKey
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_2
+        - Security
+  /api/security/encrypt:
+    post:
+      operationId: SecurityController_encrypt
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_2
+  /api/security/decrypt:
+    post:
+      operationId: SecurityController_decrypt
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_2
+  /api/aes/init:
+    get:
+      operationId: SecurityAESController_getPublicKey
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_3
+        - SecurityAES
+  /api/aes/encrypt:
+    post:
+      operationId: SecurityAESController_encrypt
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_3
+  /api/aes/decrypt:
+    post:
+      operationId: SecurityAESController_decrypt
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_3
+  /api/pulse:
+    get:
+      operationId: PulseAccessController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_4
+        - PulseAccess
+  /api/pulse/access-insight:
+    get:
+      operationId: PulseAccessController_getAccessInsight
+      parameters:
+        - name: resourceId
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: resourceType
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: actionType
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_4
+  /api/pulse/access-grants:
+    get:
+      operationId: PulseAccessController_listGrantedResourceTypes
+      parameters:
+        - name: userId
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: workspaceId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_4
+  /api/pulse/access-grants/grouped:
+    get:
+      operationId: PulseAccessController_getGrantsGroupedByResource
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_4
+  /api/pulse/access-grants/resource/grouped:
+    get:
+      operationId: PulseAccessController_getAccessGrantsGroupedByResource
+      parameters:
+        - name: resourceType
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_4
+  /api/pulse/simulate-access:
+    post:
+      operationId: PulseAccessController_simulateAccess
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessCheckInputDto'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_4
+  /api/zoi:
+    post:
+      operationId: ZoiController_createResource
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Zoi
+  /api/operation:
+    post:
+      operationId: OperationController_index
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Operation
+  /api/school:
+    get:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_5
+        - SchoolJsonApi
+    post:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_5
+  /api/school/{id}:
+    get:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+    delete:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_5
+    patch:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/school/{id}/relationships/{relName}:
+    get:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+    post:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_5
+    delete:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_5
+    patch:
+      operationId: SchoolJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/user:
+    get:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_6
+        - UserJsonApi
+    post:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_6
+  /api/user/{id}:
+    get:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_6
+    delete:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_6
+    patch:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_6
+  /api/user/{id}/relationships/{relName}:
+    get:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_6
+    post:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_6
+    delete:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_6
+    patch:
+      operationId: UserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_6
+  /api/workspace:
+    get:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_7
+        - WorkspaceJsonApi
+    post:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_7
+  /api/workspace/{id}:
+    get:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_7
+    delete:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_7
+    patch:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_7
+  /api/workspace/{id}/relationships/{relName}:
+    get:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_7
+    post:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_7
+    delete:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_7
+    patch:
+      operationId: WorkspaceJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_7
+  /api/yasser-nasser:
+    get:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_8
+        - YasserNasserJsonApi
+    post:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_8
+  /api/yasser-nasser/{id}:
+    get:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_8
+    delete:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_8
+    patch:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_8
+  /api/yasser-nasser/{id}/relationships/{relName}:
+    get:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_8
+    post:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_8
+    delete:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_8
+    patch:
+      operationId: YasserNasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_8
+  /api/role:
+    get:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_9
+        - RoleJsonApi
+    post:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_9
+  /api/role/{id}:
+    get:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_9
+    delete:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_9
+    patch:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_9
+  /api/role/{id}/relationships/{relName}:
+    get:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_9
+    post:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_9
+    delete:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_9
+    patch:
+      operationId: RoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_9
+  /api/user-role:
+    get:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_10
+        - UserRoleJsonApi
+    post:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_10
+  /api/user-role/{id}:
+    get:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_10
+    delete:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_10
+    patch:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_10
+  /api/user-role/{id}/relationships/{relName}:
+    get:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_10
+    post:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_10
+    delete:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_10
+    patch:
+      operationId: UserRoleJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_10
+  /api/resource-type:
+    get:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_11
+        - ResourceTypeJsonApi
+    post:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_11
+  /api/resource-type/{id}:
+    get:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_11
+    delete:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_11
+    patch:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_11
+  /api/resource-type/{id}/relationships/{relName}:
+    get:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_11
+    post:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_11
+    delete:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_11
+    patch:
+      operationId: ResourceTypeJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_11
+  /api/resource-action:
+    get:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_12
+        - ResourceActionJsonApi
+    post:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_12
+  /api/resource-action/{id}:
+    get:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_12
+    delete:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_12
+    patch:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_12
+  /api/resource-action/{id}/relationships/{relName}:
+    get:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_12
+    post:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_12
+    delete:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_12
+    patch:
+      operationId: ResourceActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_12
+  /api/role-permission:
+    get:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_13
+        - RolePermissionJsonApi
+    post:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_13
+  /api/role-permission/{id}:
+    get:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_13
+    delete:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_13
+    patch:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_13
+  /api/role-permission/{id}/relationships/{relName}:
+    get:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_13
+    post:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_13
+    delete:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_13
+    patch:
+      operationId: RolePermissionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_13
+  /api/access-action:
+    get:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_14
+        - AccessActionJsonApi
+    post:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_14
+  /api/access-action/{id}:
+    get:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_14
+    delete:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_14
+    patch:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_14
+  /api/access-action/{id}/relationships/{relName}:
+    get:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_14
+    post:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_14
+    delete:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_14
+    patch:
+      operationId: AccessActionJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_14
+  /api/access-event:
+    get:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_15
+        - AccessEventJsonApi
+    post:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_15
+  /api/access-event/{id}:
+    get:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_15
+    delete:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_15
+    patch:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_15
+  /api/access-event/{id}/relationships/{relName}:
+    get:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_15
+    post:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_15
+    delete:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_15
+    patch:
+      operationId: AccessEventJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_15
+  /api/document:
+    get:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_16
+        - DocumentJsonApi
+    post:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_16
+  /api/document/{id}:
+    get:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_16
+    delete:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_16
+    patch:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_16
+  /api/document/{id}/relationships/{relName}:
+    get:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_16
+    post:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_16
+    delete:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_16
+    patch:
+      operationId: DocumentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_16
+  /api/document-attachment:
+    get:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_17
+        - DocumentAttachmentJsonApi
+    post:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_17
+  /api/document-attachment/{id}:
+    get:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_17
+    delete:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_17
+    patch:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_17
+  /api/document-attachment/{id}/relationships/{relName}:
+    get:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_17
+    post:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_17
+    delete:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_17
+    patch:
+      operationId: DocumentAttachmentJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_17
+  /api/document-flow:
+    get:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_18
+        - DocumentFlowJsonApi
+    post:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_18
+  /api/document-flow/{id}:
+    get:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_18
+    delete:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_18
+    patch:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_18
+  /api/document-flow/{id}/relationships/{relName}:
+    get:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_18
+    post:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_18
+    delete:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_18
+    patch:
+      operationId: DocumentFlowJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_18
+  /api/document-signature:
+    get:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_19
+        - DocumentSignatureJsonApi
+    post:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_19
+  /api/document-signature/{id}:
+    get:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_19
+    delete:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_19
+    patch:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_19
+  /api/document-signature/{id}/relationships/{relName}:
+    get:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_19
+    post:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_19
+    delete:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_19
+    patch:
+      operationId: DocumentSignatureJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_19
+  /api/document-template:
+    get:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_20
+        - DocumentTemplateJsonApi
+    post:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_20
+  /api/document-template/{id}:
+    get:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_20
+    delete:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_20
+    patch:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_20
+  /api/document-template/{id}/relationships/{relName}:
+    get:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_20
+    post:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_20
+    delete:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_20
+    patch:
+      operationId: DocumentTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_20
+  /api/flow-template:
+    get:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_21
+        - FlowTemplateJsonApi
+    post:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_21
+  /api/flow-template/{id}:
+    get:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_21
+    delete:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_21
+    patch:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_21
+  /api/flow-template/{id}/relationships/{relName}:
+    get:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_21
+    post:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_21
+    delete:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_21
+    patch:
+      operationId: FlowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_21
+  /api/workflow-template:
+    get:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_22
+        - WorkflowTemplateJsonApi
+    post:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_22
+  /api/workflow-template/{id}:
+    get:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+    delete:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_22
+    patch:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+  /api/workflow-template/{id}/relationships/{relName}:
+    get:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+    post:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_22
+    delete:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_22
+    patch:
+      operationId: WorkflowTemplateJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_22
+  /api/workflow-run:
+    get:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_23
+        - WorkflowRunJsonApi
+    post:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_23
+  /api/workflow-run/{id}:
+    get:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_23
+    delete:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_23
+    patch:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_23
+  /api/workflow-run/{id}/relationships/{relName}:
+    get:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_23
+    post:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_23
+    delete:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_23
+    patch:
+      operationId: WorkflowRunJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_23
+  /api/workflow-log:
+    get:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_24
+        - WorkflowLogJsonApi
+    post:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_24
+  /api/workflow-log/{id}:
+    get:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_24
+    delete:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_24
+    patch:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_24
+  /api/workflow-log/{id}/relationships/{relName}:
+    get:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_24
+    post:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_24
+    delete:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_24
+    patch:
+      operationId: WorkflowLogJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_24
+  /api/object:
+    get:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_25
+        - ObjectJsonApi
+    post:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_25
+  /api/object/{id}:
+    get:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_25
+    delete:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_25
+    patch:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_25
+  /api/object/{id}/relationships/{relName}:
+    get:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_25
+    post:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_25
+    delete:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_25
+    patch:
+      operationId: ObjectJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_25
+  /api/nasser:
+    get:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_26
+        - NasserJsonApi
+    post:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_26
+  /api/nasser/{id}:
+    get:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_26
+    delete:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_26
+    patch:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_26
+  /api/nasser/{id}/relationships/{relName}:
+    get:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_26
+    post:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_26
+    delete:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_26
+    patch:
+      operationId: NasserJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_26
+  /api/eshgh:
+    get:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_27
+        - EshghJsonApi
+    post:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_27
+  /api/eshgh/{id}:
+    get:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_27
+    delete:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_27
+    patch:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_27
+  /api/eshgh/{id}/relationships/{relName}:
+    get:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_27
+    post:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_27
+    delete:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_27
+    patch:
+      operationId: EshghJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_27
+  /api/safa:
+    get:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_28
+        - SafaJsonApi
+    post:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_28
+  /api/safa/{id}:
+    get:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+    delete:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_28
+    patch:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+  /api/safa/{id}/relationships/{relName}:
+    get:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+    post:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_28
+    delete:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags: *ref_28
+    patch:
+      operationId: SafaJsonApiController_value
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_28
+info:
+  title: Knox pro
+  description: joy of engineering ;) thanks Allah.
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    AccessCheckInputDto:
+      type: object
+      properties: {}

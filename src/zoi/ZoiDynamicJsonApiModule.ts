@@ -25,8 +25,12 @@ import { WorkflowTemplate } from './entity/workflow.template.entity';
 import { WorkflowRun } from './entity/workflow.run.entity';
 import { WorkflowLog } from './entity/workflow.log.entity';
 import { UUIDValidationPipe } from 'src/common/pipe/uuid.pipe';
+import { School } from 'src/core/entity/school.entity';
+import { YasserNasser } from 'src/core/entity';
 
 const entities = [
+    School,
+    YasserNasser,
     User,
     Workspace,
     Role,
