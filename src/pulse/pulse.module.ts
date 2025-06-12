@@ -8,6 +8,7 @@ import { PulseGrantListener } from './pulse-grant.listener';
 import { PulseGrantFlowService } from './pulse.grant.flow.service';
 import { PulseGrantFlowListener } from './pulse-grant-flow.listener';
 import { PulseAccessController } from './pulse-access.controller';
+import { PulseWorkflowListener } from './listeners/pulse-workflow.listener';
 // import { PulseInterceptor } from './pulse.interceptor';
 //
 @Module({
@@ -28,7 +29,8 @@ import { PulseAccessController } from './pulse-access.controller';
         PulseAccessService,
         PulseGrantListener,
         PulseGrantFlowService,
-        PulseGrantFlowListener
+        PulseGrantFlowListener,
+        PulseWorkflowListener
     ],
     exports: [
         PulseAccessService,

@@ -15,7 +15,8 @@ export class WorkflowLog {
   step_index: number | null;
 
   @Column()
-  type: 'triggered' | 'resumed' | 'failed' | 'skipped' | 'completed' | 'manual_edit';
+  type: 'triggered' | 'workflow_triggered' | 'trigger_error' | 'resumed' | 'failed' | 'skipped' | 'completed' | 'manual_edit' | 'trigger_failed' 
+  // 'triggered' | 'resumed' | 'failed' | 'skipped' | 'completed' | 'manual_edit';
 
   @Column()
   message: string;

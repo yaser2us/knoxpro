@@ -60,8 +60,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         );
 
         if (isWhitelisted) {
-            console.log(`[JwtAuthGuard] Allowed: ${method} ${route?.path} (Whitelisted) ${isWhitelisted}`);
-            console.log(route?.path.startsWith('/api'), '[JwtAuthGuard] route?.path.startsWith(item.path)')
+            // console.log(`[JwtAuthGuard] Allowed: ${method} ${route?.path} (Whitelisted) ${isWhitelisted}`);
+            // console.log(route?.path.startsWith('/api'), '[JwtAuthGuard] route?.path.startsWith(item.path)')
             return true; // ✅ Allow access without JWT
         }
 
@@ -69,7 +69,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
             context.getHandler(),
             context.getClass(),
         ]);
-        console.log(isPublic, '[JwtAuthGuard]')
+        // console.log(isPublic, '[JwtAuthGuard]')
 
         if (isPublic) {
             return true;
@@ -83,7 +83,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         if (err || !user) {
             throw err || new UnauthorizedException();
         }
-        console.log('[JwtAuthGuard] user', user)
+        // console.log('[JwtAuthGuard] user', user)
         return user;
     }
 

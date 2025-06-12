@@ -29,4 +29,7 @@ export class WorkflowTemplate {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Column({ default: 9 })
+  priority: number
 }

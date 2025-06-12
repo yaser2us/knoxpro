@@ -404,7 +404,7 @@ export class PulseAccessService {
       }
     });
 
-    console.log('[policies]', policies, resourceType, actionType)
+    // console.log('[policies]', policies, resourceType, actionType)
 
     for (const policy of policies) {
       for (const roleName of roleNames) {
@@ -414,7 +414,7 @@ export class PulseAccessService {
           workspaceId
         };
 
-        console.log('[policy]', policy, context, resourceMetadata, policy.conditions);
+        // console.log('[policy]', policy, context, resourceMetadata, policy.conditions);
 
         if (this.evaluateConditions(context, resourceMetadata, policy.conditions)) {
           return { granted: true, grantedBy: 'policy' };
@@ -1044,10 +1044,10 @@ export class PulseAccessService {
       where: { resourceType, actionType }
     });
 
-    console.log('[policies] simulate', policies, resourceType, actionType)
+    // console.log('[policies] simulate', policies, resourceType, actionType)
 
     for (const policy of policies) {
-      console.log('[policy] roleNames', roleNames);
+      // console.log('[policy] roleNames', roleNames);
       for (const roleName of roleNames) {
         const context = {
           ...userMetadata,

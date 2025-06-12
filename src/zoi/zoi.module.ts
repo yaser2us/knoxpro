@@ -21,12 +21,19 @@ import { WorkflowTemplate } from './entity/workflow.template.entity';
 import { WorkflowRun } from './entity/workflow.run.entity';
 import { WorkflowLog } from './entity/workflow.log.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ZoiDocumentInterceptor } from './zoi.document.interceptor';
+import { ZoiDocumentInterceptor, ZoiDocumentInterceptorRobust } from './zoi.document.interceptor';
 import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
 import { WinstonLoggerService } from 'src/common/logger/winston-logger.service';
 import { winstonConfig } from 'src/common/logger/logger.config';
 import { LoggerModule } from 'src/common/logger/logger.module';
+import { EventBusModule } from './events/event-bus.module';
+import { ScheduleModule } from '@nestjs/schedule';
+// import { EventReplayService } from './events/event-replay.service';
+// import { EventMonitoringService } from './events/event-monitoring.service';
+import { ZoiWorkflowTriggerService } from './services/zoi-workflow-trigger.service';
+import { ZoiDebugController } from './controllers/zoi-debug.controller';
 // import { ZoiHotReloadService } from './zoi.hot.reload.service';
+
 
 export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
 
@@ -34,6 +41,12 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
 @Module({
     imports: [
         // WinstonModule.forRoot(winstonConfig), // <== Required to inject WINSTON_MODULE_NEST_PROVIDER
+        // Import EventBus globally
+        EventBusModule.forRoot({
+            useRedis: process.env.USE_REDIS_EVENT_BUS === 'true',
+            redisUrl: process.env.REDIS_URL,
+            maxHistorySize: 5000
+        }),
         LoggerModule.register('ZoiStepExecutor'),
         TypeOrmModule.forFeature([
             Document,
@@ -47,9 +60,12 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
             WorkflowLog
             // optionally other entities
         ]),
+        // For cron jobs in monitoring
+        ScheduleModule.forRoot()
     ],
     controllers: [
-        ZoiController
+        ZoiController,
+        ZoiDebugController
     ],
     providers: [
         // ZoiHotReloadService,
@@ -65,7 +81,32 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         ZoiStepExecutor,
         {
             provide: APP_INTERCEPTOR,
-            useClass: ZoiDocumentInterceptor
+            useClass: ZoiDocumentInterceptorRobust//ZoiDocumentInterceptor
+        },
+        // Core Zoi Services
+        // ZoiDocumentInterceptor,
+        ZoiDocumentInterceptorRobust,
+        ZoiWorkflowTriggerService,
+        ZoiFlowEngine,
+
+        // Event System Services
+        // EventMonitoringService,
+        // EventReplayService,
+
+        // Recovery Service for crash recovery
+        {
+            provide: 'ZOI_RECOVERY_SERVICE',
+            useFactory: (flowEngine: ZoiFlowEngine) => {
+                return {
+                    async recoverInterruptedWorkflows() {
+                        // Implementation for recovering workflows on startup
+                        console.log('🔄 Recovering interrupted workflows...');
+                        // Find workflows with status 'running' or 'waiting_for_step'
+                        // Re-emit their current step events
+                    }
+                };
+            },
+            inject: [ZoiFlowEngine]
         }
         // { provide: ENTITY_PARAM_MAP, useValue: new Map() },
     ],
@@ -73,7 +114,10 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         ZoiBootstrapService,
         ZoiSchemaService,
         ZoiFlowEngine,
-        ZoiStepExecutor
+        ZoiStepExecutor,
+        ZoiWorkflowTriggerService,
+        // EventMonitoringService,
+        // EventReplayService
         // 'UserLogger'
     ],
 })
