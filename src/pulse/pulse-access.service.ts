@@ -320,6 +320,7 @@ export class PulseAccessService {
 
 
   async canAccess(params: {
+    role: string,
     actorId: string;
     workspaceId: string;
     resourceId?: string;
@@ -327,8 +328,9 @@ export class PulseAccessService {
     actionType: string;
     userMetadata?: Record<string, any>;
     resourceMetadata?: Record<string, any>;
-  }): Promise<{ granted: boolean; grantedBy?: 'access_action' | 'role_permission' | 'policy' }> {
-    const {
+  }): Promise<{ granted: boolean; grantedBy?: 'access_action' | 'role_permission' | 'policy' | 'root' }> {
+    let {
+      role,
       actorId,
       workspaceId,
       resourceId,
@@ -338,13 +340,22 @@ export class PulseAccessService {
       resourceMetadata = {}
     } = params;
 
+    let resource = resourceType;
+
+    if (role === 'admin') {
+      resource = '*';
+      actionType = '*';
+    }
+
+    console.log('[canAccess]', resource, resourceType)
+
     // 1. Direct access check
     if (resourceId) {
       const direct = await this.accessActionRepo.findOne({
         where: {
           actor: { id: actorId },
           resourceId,
-          resourceType,
+          resourceType: resource,
           actionType,
           enabled: true,
           expiresAt: Raw(alias => `${alias} IS NULL OR ${alias} > NOW()`)
@@ -387,18 +398,23 @@ export class PulseAccessService {
     // 3. ABAC policy check
     const policies = await this.policyRepo.find({
       where: {
-        resourceType,
+        resourceType: resource,
+        // resourceType,
         actionType
       }
     });
+
+    console.log('[policies]', policies, resourceType, actionType)
 
     for (const policy of policies) {
       for (const roleName of roleNames) {
         const context = {
           ...userMetadata,
-          role: roleName,
+          role: role === 'admin' ? 'admin' : roleName,
           workspaceId
         };
+
+        console.log('[policy]', policy, context, resourceMetadata, policy.conditions);
 
         if (this.evaluateConditions(context, resourceMetadata, policy.conditions)) {
           return { granted: true, grantedBy: 'policy' };
@@ -406,8 +422,10 @@ export class PulseAccessService {
       }
     }
 
+    console.log('[canAccess] No direct access, role permission or policy matched',)
+
     // Fallback
-    return { granted: false };
+    return { granted: false, grantedBy: 'root' };
   }
 
   async getAccessInsight(params: {
@@ -876,23 +894,23 @@ export class PulseAccessService {
     conditions: Record<string, any>
   ): { passed: boolean; matchedConditions: any[] } {
     const matchedConditions: any[] = [];
-  
+
     const getValue = (key: string): any => {
       return userAttrs[key] ?? resourceAttrs[key];
     };
-  
+
     const evaluate = (cond: any): boolean => {
       if (typeof cond !== 'object' || cond === null) return false;
-  
+
       return Object.entries(cond).every(([key, rule]) => {
         const actual = getValue(key);
-  
+
         if (Array.isArray(rule)) {
           const result = rule.includes(actual);
           matchedConditions.push({ key, expected: rule, actual, result });
           return result;
         }
-  
+
         if (typeof rule === 'object' && rule !== null) {
           if ('$in' in rule) {
             const result = Array.isArray(rule.$in) && rule.$in.includes(actual);
@@ -910,19 +928,19 @@ export class PulseAccessService {
             return result;
           }
         }
-  
+
         const result = actual === rule;
         matchedConditions.push({ key, expected: rule, actual, result });
         return result;
       });
     };
-  
+
     return {
       passed: evaluate(conditions),
       matchedConditions
     };
   }
-  
+
 
   async simulateAccess(params: {
     actorId: string;
@@ -953,7 +971,7 @@ export class PulseAccessService {
       userMetadata = {},
       resourceMetadata = {}
     } = params;
-  
+
     const result: SimulatedAccessResult = {
       granted: false,
       details: {
@@ -964,7 +982,7 @@ export class PulseAccessService {
         failedPolicyConditions: []
       }
     };
-  
+
     // 1. Direct access check
     if (resourceId) {
       const direct = await this.accessActionRepo.findOne({
@@ -977,7 +995,7 @@ export class PulseAccessService {
           expiresAt: Raw(alias => `${alias} IS NULL OR ${alias} > NOW()`)
         }
       });
-  
+
       if (direct) {
         return {
           granted: true,
@@ -986,7 +1004,7 @@ export class PulseAccessService {
         };
       }
     }
-  
+
     // 2. Role check
     const roles = await this.userRoleRepo.find({
       where: {
@@ -995,10 +1013,12 @@ export class PulseAccessService {
       },
       relations: ['role']
     });
-  
+
+    console.log('[roles] simulate', roles, actorId, workspaceId)
+
     const roleNames = roles.map(r => r.role.name);
     result.details.roles = roleNames;
-  
+
     const roleIds = roles.map(r => r.role.id);
     if (roleIds.length > 0) {
       const perm = await this.rolePermissionRepo.findOne({
@@ -1009,7 +1029,7 @@ export class PulseAccessService {
         },
         relations: ['role', 'resourceType']
       });
-  
+
       if (perm) {
         return {
           granted: true,
@@ -1018,27 +1038,30 @@ export class PulseAccessService {
         };
       }
     }
-  
+
     // 3. ABAC policy evaluation
     const policies = await this.policyRepo.find({
       where: { resourceType, actionType }
     });
-  
+
+    console.log('[policies] simulate', policies, resourceType, actionType)
+
     for (const policy of policies) {
+      console.log('[policy] roleNames', roleNames);
       for (const roleName of roleNames) {
         const context = {
           ...userMetadata,
           role: roleName,
           workspaceId
         };
-  
+
         // const passed = this.evaluateConditions(context, resourceMetadata, policy.conditions);
         const { passed, matchedConditions } = this.evaluateWithTrace(
           context,
           resourceMetadata,
           policy.conditions
         );
-
+        console.log('[policy evaluation]', policy.name, passed, matchedConditions);
         if (passed) {
           return {
             granted: true,
@@ -1058,8 +1081,8 @@ export class PulseAccessService {
         }
       }
     }
-  
+
     return result;
   }
-  
+
 }

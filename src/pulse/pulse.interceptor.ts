@@ -39,13 +39,13 @@ export const rawWhitelistPaths: Omit<WhitelistRule, 'matcher'>[] = [
   { method: 'POST', path: '/api/pulse/simulate-access' },
 
   { method: 'ALL', path: '/api/zoi' },
-  { method: 'ALL', path: '/api/Workspace' },
+  // { method: 'ALL', path: '/api/Workspace' },
   { method: 'ALL', path: '/api/object' },
-  { method: 'ALL', path: '/api/nasser' },
+  // { method: 'ALL', path: '/api/nasser' },
   { method: 'PATCH', path: '/api/nasser/:id' },
   
-  { method: 'GET', path: '/api/user' },
-  { method: 'GET', path: '/api/user/:id' },
+  // { method: 'GET', path: '/api/user' },
+  // { method: 'GET', path: '/api/user/:id' },
 
   { method: 'GET', path: '/api/flow-template' },
   { method: 'POST', path: '/api/flow-template' },
@@ -54,15 +54,20 @@ export const rawWhitelistPaths: Omit<WhitelistRule, 'matcher'>[] = [
   { method: 'GET', path: '/api/document' },
   { method: 'GET', path: '/api/document/:id' },
 
-  { method: 'GET', path: '/api/workspace' },
-  { method: 'GET', path: '/api/workspace/:id' },
-  { method: 'POST', path: '/api/workspace/:id' },
-  { method: 'PATCH', path: '/api/workspace/:id' },
+  // { method: 'GET', path: '/api/workspace' },
+  // { method: 'GET', path: '/api/workspace/:id' },
+  // { method: 'POST', path: '/api/workspace/:id' },
+  // { method: 'PATCH', path: '/api/workspace/:id' },
 
-  { method: 'GET', path: '/api/yasser-nasser' },
-  { method: 'GET', path: '/api/yasser-nasser/:id' },
-  { method: 'POST', path: '/api/yasser-nasser/:id' },
-  { method: 'PATCH', path: '/api/yasser-nasser/:id' },
+  // { method: 'GET', path: '/api/school' },
+  // { method: 'GET', path: '/api/school/:id' },
+  // { method: 'POST', path: '/api/school/:id' },
+  // { method: 'PATCH', path: '/api/school/:id' },
+
+  // { method: 'GET', path: '/api/yasser-nasser' },
+  // { method: 'GET', path: '/api/yasser-nasser/:id' },
+  // { method: 'POST', path: '/api/yasser-nasser/:id' },
+  // { method: 'PATCH', path: '/api/yasser-nasser/:id' },
 //
   { method: 'GET', path: '/api/workflow-template' },
   { method: 'GET', path: '/api/workflow-template/:id' },
@@ -143,6 +148,7 @@ export class PulseInterceptor implements NestInterceptor {
     const actionType = mapHttpMethodToAction(req.method);
 
     console.log('[paulse]', {
+      role: user.role,
       actorId: user.id,
       workspaceId: user.workspaceId,
       resourceType,
@@ -152,6 +158,7 @@ export class PulseInterceptor implements NestInterceptor {
     })
 
     const { granted: hasAccess, grantedBy } = await this.pulse.canAccess({
+      role: user.role,
       actorId: user.id,
       workspaceId: 'd9f8ec62-bb8b-4f7d-a192-c0a4c71f30dd', //user.workspaceId,
       resourceType,

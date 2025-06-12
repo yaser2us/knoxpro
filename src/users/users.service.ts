@@ -11,7 +11,7 @@ export class UsersService {
       username: 'john',
       password: 'changeme',
       role: 'admin',
-      "id": "3f98f0c4-8a77-4d3e-88e9-4e2a4a024da7", //"8e1dd9b4-dc1e-4140-9c92-39a5db38bc11",  // doctor-x
+      "id": "a1f39dc1-b99d-4101-aeb8-09f8e97430ea", //"8e1dd9b4-dc1e-4140-9c92-39a5db38bc11",  // doctor-x
       "workspaceId": "d9f8ec62-bb8b-4f7d-a192-c0a4c71f30dd",
       "metadata": {
         "geo": "SG",
