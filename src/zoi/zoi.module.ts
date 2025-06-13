@@ -32,6 +32,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 // import { EventMonitoringService } from './events/event-monitoring.service';
 import { ZoiWorkflowTriggerService } from './services/zoi-workflow-trigger.service';
 import { ZoiDebugController } from './controllers/zoi-debug.controller';
+import { WorkflowOrchestrator } from './services/workflow-orchestrator.service';
 // import { ZoiHotReloadService } from './zoi.hot.reload.service';
 
 
@@ -87,6 +88,7 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         // ZoiDocumentInterceptor,
         ZoiDocumentInterceptorRobust,
         ZoiWorkflowTriggerService,
+        WorkflowOrchestrator,
         ZoiFlowEngine,
 
         // Event System Services
@@ -116,9 +118,11 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         ZoiFlowEngine,
         ZoiStepExecutor,
         ZoiWorkflowTriggerService,
+        WorkflowOrchestrator
         // EventMonitoringService,
         // EventReplayService
         // 'UserLogger'
     ],
 })
 export class ZoiModule { }
+//

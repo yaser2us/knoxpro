@@ -1,9 +1,19 @@
 openapi: 3.1.1
 paths:
-  /api:
+  /api/hellow:
     get:
       operationId: AppController_getHello
-      parameters: []
+      parameters:
+        - name: id
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: done
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -207,6 +217,107 @@ paths:
           description: ''
       tags:
         - Zoi
+  /api/zoi/debug/test-event-flow:
+    get:
+      operationId: ZoiDebugController_testEventFlow
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_5
+        - ZoiDebug
+  /api/zoi/debug/emit-document-event:
+    post:
+      operationId: ZoiDebugController_emitDocumentEvent
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/analyze-event-structure/{eventType}:
+    get:
+      operationId: ZoiDebugController_analyzeEventStructure
+      parameters:
+        - name: eventType
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/capture-events:
+    get:
+      operationId: ZoiDebugController_startCapturingEvents
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/stop-capture:
+    get:
+      operationId: ZoiDebugController_stopCapturingEvents
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/workflow-stats:
+    get:
+      operationId: ZoiDebugController_getWorkflowStats
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/test-trigger-conditions/{templateId}:
+    post:
+      operationId: ZoiDebugController_testTriggerConditions
+      parameters:
+        - name: templateId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/refresh-cache:
+    post:
+      operationId: ZoiDebugController_refreshTriggerCache
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/simulate-interceptor/{method}:
+    get:
+      operationId: ZoiDebugController_simulateInterceptor
+      parameters:
+        - name: method
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: responseFormat
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /api/zoi/debug/health-check:
+    get:
+      operationId: ZoiDebugController_healthCheck
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
   /api/operation:
     post:
       operationId: OperationController_index
@@ -231,7 +342,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_5
+      tags: &ref_6
         - SchoolJsonApi
     post:
       operationId: SchoolJsonApiController_value
@@ -239,7 +350,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
   /api/school/{id}:
     get:
       operationId: SchoolJsonApiController_value
@@ -247,21 +358,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
     delete:
       operationId: SchoolJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
     patch:
       operationId: SchoolJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
   /api/school/{id}/relationships/{relName}:
     get:
       operationId: SchoolJsonApiController_value
@@ -269,28 +380,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
     post:
       operationId: SchoolJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
     delete:
       operationId: SchoolJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
     patch:
       operationId: SchoolJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_5
+      tags: *ref_6
   /api/user:
     get:
       operationId: UserJsonApiController_value
@@ -298,7 +409,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_6
+      tags: &ref_7
         - UserJsonApi
     post:
       operationId: UserJsonApiController_value
@@ -306,7 +417,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
   /api/user/{id}:
     get:
       operationId: UserJsonApiController_value
@@ -314,21 +425,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
     delete:
       operationId: UserJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
     patch:
       operationId: UserJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
   /api/user/{id}/relationships/{relName}:
     get:
       operationId: UserJsonApiController_value
@@ -336,28 +447,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
     post:
       operationId: UserJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
     delete:
       operationId: UserJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
     patch:
       operationId: UserJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_6
+      tags: *ref_7
   /api/workspace:
     get:
       operationId: WorkspaceJsonApiController_value
@@ -365,7 +476,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_7
+      tags: &ref_8
         - WorkspaceJsonApi
     post:
       operationId: WorkspaceJsonApiController_value
@@ -373,7 +484,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
   /api/workspace/{id}:
     get:
       operationId: WorkspaceJsonApiController_value
@@ -381,21 +492,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
     delete:
       operationId: WorkspaceJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
     patch:
       operationId: WorkspaceJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
   /api/workspace/{id}/relationships/{relName}:
     get:
       operationId: WorkspaceJsonApiController_value
@@ -403,28 +514,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
     post:
       operationId: WorkspaceJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
     delete:
       operationId: WorkspaceJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
     patch:
       operationId: WorkspaceJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_7
+      tags: *ref_8
   /api/yasser-nasser:
     get:
       operationId: YasserNasserJsonApiController_value
@@ -432,7 +543,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_8
+      tags: &ref_9
         - YasserNasserJsonApi
     post:
       operationId: YasserNasserJsonApiController_value
@@ -440,7 +551,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
   /api/yasser-nasser/{id}:
     get:
       operationId: YasserNasserJsonApiController_value
@@ -448,21 +559,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
     delete:
       operationId: YasserNasserJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
     patch:
       operationId: YasserNasserJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
   /api/yasser-nasser/{id}/relationships/{relName}:
     get:
       operationId: YasserNasserJsonApiController_value
@@ -470,28 +581,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
     post:
       operationId: YasserNasserJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
     delete:
       operationId: YasserNasserJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
     patch:
       operationId: YasserNasserJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_8
+      tags: *ref_9
   /api/role:
     get:
       operationId: RoleJsonApiController_value
@@ -499,7 +610,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_9
+      tags: &ref_10
         - RoleJsonApi
     post:
       operationId: RoleJsonApiController_value
@@ -507,7 +618,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
   /api/role/{id}:
     get:
       operationId: RoleJsonApiController_value
@@ -515,21 +626,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
     delete:
       operationId: RoleJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
     patch:
       operationId: RoleJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
   /api/role/{id}/relationships/{relName}:
     get:
       operationId: RoleJsonApiController_value
@@ -537,28 +648,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
     post:
       operationId: RoleJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
     delete:
       operationId: RoleJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
     patch:
       operationId: RoleJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_9
+      tags: *ref_10
   /api/user-role:
     get:
       operationId: UserRoleJsonApiController_value
@@ -566,7 +677,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_10
+      tags: &ref_11
         - UserRoleJsonApi
     post:
       operationId: UserRoleJsonApiController_value
@@ -574,7 +685,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
   /api/user-role/{id}:
     get:
       operationId: UserRoleJsonApiController_value
@@ -582,21 +693,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
     delete:
       operationId: UserRoleJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
     patch:
       operationId: UserRoleJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
   /api/user-role/{id}/relationships/{relName}:
     get:
       operationId: UserRoleJsonApiController_value
@@ -604,28 +715,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
     post:
       operationId: UserRoleJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
     delete:
       operationId: UserRoleJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
     patch:
       operationId: UserRoleJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_10
+      tags: *ref_11
   /api/resource-type:
     get:
       operationId: ResourceTypeJsonApiController_value
@@ -633,7 +744,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_11
+      tags: &ref_12
         - ResourceTypeJsonApi
     post:
       operationId: ResourceTypeJsonApiController_value
@@ -641,7 +752,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
   /api/resource-type/{id}:
     get:
       operationId: ResourceTypeJsonApiController_value
@@ -649,21 +760,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
     delete:
       operationId: ResourceTypeJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
     patch:
       operationId: ResourceTypeJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
   /api/resource-type/{id}/relationships/{relName}:
     get:
       operationId: ResourceTypeJsonApiController_value
@@ -671,28 +782,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
     post:
       operationId: ResourceTypeJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
     delete:
       operationId: ResourceTypeJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
     patch:
       operationId: ResourceTypeJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_11
+      tags: *ref_12
   /api/resource-action:
     get:
       operationId: ResourceActionJsonApiController_value
@@ -700,7 +811,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_12
+      tags: &ref_13
         - ResourceActionJsonApi
     post:
       operationId: ResourceActionJsonApiController_value
@@ -708,7 +819,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
   /api/resource-action/{id}:
     get:
       operationId: ResourceActionJsonApiController_value
@@ -716,21 +827,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
     delete:
       operationId: ResourceActionJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
     patch:
       operationId: ResourceActionJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
   /api/resource-action/{id}/relationships/{relName}:
     get:
       operationId: ResourceActionJsonApiController_value
@@ -738,28 +849,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
     post:
       operationId: ResourceActionJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
     delete:
       operationId: ResourceActionJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
     patch:
       operationId: ResourceActionJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_12
+      tags: *ref_13
   /api/role-permission:
     get:
       operationId: RolePermissionJsonApiController_value
@@ -767,7 +878,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_13
+      tags: &ref_14
         - RolePermissionJsonApi
     post:
       operationId: RolePermissionJsonApiController_value
@@ -775,7 +886,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
   /api/role-permission/{id}:
     get:
       operationId: RolePermissionJsonApiController_value
@@ -783,21 +894,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
     delete:
       operationId: RolePermissionJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
     patch:
       operationId: RolePermissionJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
   /api/role-permission/{id}/relationships/{relName}:
     get:
       operationId: RolePermissionJsonApiController_value
@@ -805,28 +916,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
     post:
       operationId: RolePermissionJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
     delete:
       operationId: RolePermissionJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
     patch:
       operationId: RolePermissionJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_13
+      tags: *ref_14
   /api/access-action:
     get:
       operationId: AccessActionJsonApiController_value
@@ -834,7 +945,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_14
+      tags: &ref_15
         - AccessActionJsonApi
     post:
       operationId: AccessActionJsonApiController_value
@@ -842,7 +953,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
   /api/access-action/{id}:
     get:
       operationId: AccessActionJsonApiController_value
@@ -850,21 +961,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
     delete:
       operationId: AccessActionJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
     patch:
       operationId: AccessActionJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
   /api/access-action/{id}/relationships/{relName}:
     get:
       operationId: AccessActionJsonApiController_value
@@ -872,28 +983,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
     post:
       operationId: AccessActionJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
     delete:
       operationId: AccessActionJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
     patch:
       operationId: AccessActionJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_14
+      tags: *ref_15
   /api/access-event:
     get:
       operationId: AccessEventJsonApiController_value
@@ -901,7 +1012,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_15
+      tags: &ref_16
         - AccessEventJsonApi
     post:
       operationId: AccessEventJsonApiController_value
@@ -909,7 +1020,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
   /api/access-event/{id}:
     get:
       operationId: AccessEventJsonApiController_value
@@ -917,21 +1028,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
     delete:
       operationId: AccessEventJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
     patch:
       operationId: AccessEventJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
   /api/access-event/{id}/relationships/{relName}:
     get:
       operationId: AccessEventJsonApiController_value
@@ -939,28 +1050,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
     post:
       operationId: AccessEventJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
     delete:
       operationId: AccessEventJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
     patch:
       operationId: AccessEventJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_15
+      tags: *ref_16
   /api/document:
     get:
       operationId: DocumentJsonApiController_value
@@ -968,7 +1079,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_16
+      tags: &ref_17
         - DocumentJsonApi
     post:
       operationId: DocumentJsonApiController_value
@@ -976,7 +1087,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
   /api/document/{id}:
     get:
       operationId: DocumentJsonApiController_value
@@ -984,21 +1095,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
     delete:
       operationId: DocumentJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
     patch:
       operationId: DocumentJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
   /api/document/{id}/relationships/{relName}:
     get:
       operationId: DocumentJsonApiController_value
@@ -1006,28 +1117,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
     post:
       operationId: DocumentJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
     delete:
       operationId: DocumentJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
     patch:
       operationId: DocumentJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_16
+      tags: *ref_17
   /api/document-attachment:
     get:
       operationId: DocumentAttachmentJsonApiController_value
@@ -1035,7 +1146,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_17
+      tags: &ref_18
         - DocumentAttachmentJsonApi
     post:
       operationId: DocumentAttachmentJsonApiController_value
@@ -1043,7 +1154,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
   /api/document-attachment/{id}:
     get:
       operationId: DocumentAttachmentJsonApiController_value
@@ -1051,21 +1162,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
     delete:
       operationId: DocumentAttachmentJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
     patch:
       operationId: DocumentAttachmentJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
   /api/document-attachment/{id}/relationships/{relName}:
     get:
       operationId: DocumentAttachmentJsonApiController_value
@@ -1073,28 +1184,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
     post:
       operationId: DocumentAttachmentJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
     delete:
       operationId: DocumentAttachmentJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
     patch:
       operationId: DocumentAttachmentJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_17
+      tags: *ref_18
   /api/document-flow:
     get:
       operationId: DocumentFlowJsonApiController_value
@@ -1102,7 +1213,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_18
+      tags: &ref_19
         - DocumentFlowJsonApi
     post:
       operationId: DocumentFlowJsonApiController_value
@@ -1110,7 +1221,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
   /api/document-flow/{id}:
     get:
       operationId: DocumentFlowJsonApiController_value
@@ -1118,21 +1229,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
     delete:
       operationId: DocumentFlowJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
     patch:
       operationId: DocumentFlowJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
   /api/document-flow/{id}/relationships/{relName}:
     get:
       operationId: DocumentFlowJsonApiController_value
@@ -1140,28 +1251,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
     post:
       operationId: DocumentFlowJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
     delete:
       operationId: DocumentFlowJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
     patch:
       operationId: DocumentFlowJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_18
+      tags: *ref_19
   /api/document-signature:
     get:
       operationId: DocumentSignatureJsonApiController_value
@@ -1169,7 +1280,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_19
+      tags: &ref_20
         - DocumentSignatureJsonApi
     post:
       operationId: DocumentSignatureJsonApiController_value
@@ -1177,7 +1288,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
   /api/document-signature/{id}:
     get:
       operationId: DocumentSignatureJsonApiController_value
@@ -1185,21 +1296,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
     delete:
       operationId: DocumentSignatureJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
     patch:
       operationId: DocumentSignatureJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
   /api/document-signature/{id}/relationships/{relName}:
     get:
       operationId: DocumentSignatureJsonApiController_value
@@ -1207,28 +1318,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
     post:
       operationId: DocumentSignatureJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
     delete:
       operationId: DocumentSignatureJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
     patch:
       operationId: DocumentSignatureJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_19
+      tags: *ref_20
   /api/document-template:
     get:
       operationId: DocumentTemplateJsonApiController_value
@@ -1236,7 +1347,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_20
+      tags: &ref_21
         - DocumentTemplateJsonApi
     post:
       operationId: DocumentTemplateJsonApiController_value
@@ -1244,7 +1355,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
   /api/document-template/{id}:
     get:
       operationId: DocumentTemplateJsonApiController_value
@@ -1252,21 +1363,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
     delete:
       operationId: DocumentTemplateJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
     patch:
       operationId: DocumentTemplateJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
   /api/document-template/{id}/relationships/{relName}:
     get:
       operationId: DocumentTemplateJsonApiController_value
@@ -1274,28 +1385,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
     post:
       operationId: DocumentTemplateJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
     delete:
       operationId: DocumentTemplateJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
     patch:
       operationId: DocumentTemplateJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_20
+      tags: *ref_21
   /api/flow-template:
     get:
       operationId: FlowTemplateJsonApiController_value
@@ -1303,7 +1414,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_21
+      tags: &ref_22
         - FlowTemplateJsonApi
     post:
       operationId: FlowTemplateJsonApiController_value
@@ -1311,7 +1422,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
   /api/flow-template/{id}:
     get:
       operationId: FlowTemplateJsonApiController_value
@@ -1319,21 +1430,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
     delete:
       operationId: FlowTemplateJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
     patch:
       operationId: FlowTemplateJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
   /api/flow-template/{id}/relationships/{relName}:
     get:
       operationId: FlowTemplateJsonApiController_value
@@ -1341,28 +1452,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
     post:
       operationId: FlowTemplateJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
     delete:
       operationId: FlowTemplateJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
     patch:
       operationId: FlowTemplateJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_21
+      tags: *ref_22
   /api/workflow-template:
     get:
       operationId: WorkflowTemplateJsonApiController_value
@@ -1370,7 +1481,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_22
+      tags: &ref_23
         - WorkflowTemplateJsonApi
     post:
       operationId: WorkflowTemplateJsonApiController_value
@@ -1378,7 +1489,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
   /api/workflow-template/{id}:
     get:
       operationId: WorkflowTemplateJsonApiController_value
@@ -1386,21 +1497,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
     delete:
       operationId: WorkflowTemplateJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
     patch:
       operationId: WorkflowTemplateJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
   /api/workflow-template/{id}/relationships/{relName}:
     get:
       operationId: WorkflowTemplateJsonApiController_value
@@ -1408,28 +1519,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
     post:
       operationId: WorkflowTemplateJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
     delete:
       operationId: WorkflowTemplateJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
     patch:
       operationId: WorkflowTemplateJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_22
+      tags: *ref_23
   /api/workflow-run:
     get:
       operationId: WorkflowRunJsonApiController_value
@@ -1437,7 +1548,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_23
+      tags: &ref_24
         - WorkflowRunJsonApi
     post:
       operationId: WorkflowRunJsonApiController_value
@@ -1445,7 +1556,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
   /api/workflow-run/{id}:
     get:
       operationId: WorkflowRunJsonApiController_value
@@ -1453,21 +1564,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
     delete:
       operationId: WorkflowRunJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
     patch:
       operationId: WorkflowRunJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
   /api/workflow-run/{id}/relationships/{relName}:
     get:
       operationId: WorkflowRunJsonApiController_value
@@ -1475,28 +1586,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
     post:
       operationId: WorkflowRunJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
     delete:
       operationId: WorkflowRunJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
     patch:
       operationId: WorkflowRunJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_23
+      tags: *ref_24
   /api/workflow-log:
     get:
       operationId: WorkflowLogJsonApiController_value
@@ -1504,7 +1615,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_24
+      tags: &ref_25
         - WorkflowLogJsonApi
     post:
       operationId: WorkflowLogJsonApiController_value
@@ -1512,7 +1623,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
   /api/workflow-log/{id}:
     get:
       operationId: WorkflowLogJsonApiController_value
@@ -1520,21 +1631,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
     delete:
       operationId: WorkflowLogJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
     patch:
       operationId: WorkflowLogJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
   /api/workflow-log/{id}/relationships/{relName}:
     get:
       operationId: WorkflowLogJsonApiController_value
@@ -1542,28 +1653,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
     post:
       operationId: WorkflowLogJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
     delete:
       operationId: WorkflowLogJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
     patch:
       operationId: WorkflowLogJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_24
+      tags: *ref_25
   /api/object:
     get:
       operationId: ObjectJsonApiController_value
@@ -1571,7 +1682,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_25
+      tags: &ref_26
         - ObjectJsonApi
     post:
       operationId: ObjectJsonApiController_value
@@ -1579,7 +1690,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
   /api/object/{id}:
     get:
       operationId: ObjectJsonApiController_value
@@ -1587,21 +1698,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
     delete:
       operationId: ObjectJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
     patch:
       operationId: ObjectJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
   /api/object/{id}/relationships/{relName}:
     get:
       operationId: ObjectJsonApiController_value
@@ -1609,28 +1720,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
     post:
       operationId: ObjectJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
     delete:
       operationId: ObjectJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
     patch:
       operationId: ObjectJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_25
+      tags: *ref_26
   /api/nasser:
     get:
       operationId: NasserJsonApiController_value
@@ -1638,7 +1749,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_26
+      tags: &ref_27
         - NasserJsonApi
     post:
       operationId: NasserJsonApiController_value
@@ -1646,7 +1757,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
   /api/nasser/{id}:
     get:
       operationId: NasserJsonApiController_value
@@ -1654,21 +1765,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
     delete:
       operationId: NasserJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
     patch:
       operationId: NasserJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
   /api/nasser/{id}/relationships/{relName}:
     get:
       operationId: NasserJsonApiController_value
@@ -1676,28 +1787,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
     post:
       operationId: NasserJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
     delete:
       operationId: NasserJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
     patch:
       operationId: NasserJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_26
+      tags: *ref_27
   /api/eshgh:
     get:
       operationId: EshghJsonApiController_value
@@ -1705,7 +1816,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_27
+      tags: &ref_28
         - EshghJsonApi
     post:
       operationId: EshghJsonApiController_value
@@ -1713,7 +1824,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
   /api/eshgh/{id}:
     get:
       operationId: EshghJsonApiController_value
@@ -1721,21 +1832,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
     delete:
       operationId: EshghJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
     patch:
       operationId: EshghJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
   /api/eshgh/{id}/relationships/{relName}:
     get:
       operationId: EshghJsonApiController_value
@@ -1743,28 +1854,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
     post:
       operationId: EshghJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
     delete:
       operationId: EshghJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
     patch:
       operationId: EshghJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_27
+      tags: *ref_28
   /api/safa:
     get:
       operationId: SafaJsonApiController_value
@@ -1772,7 +1883,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: &ref_28
+      tags: &ref_29
         - SafaJsonApi
     post:
       operationId: SafaJsonApiController_value
@@ -1780,7 +1891,7 @@ paths:
       responses:
         '201':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
   /api/safa/{id}:
     get:
       operationId: SafaJsonApiController_value
@@ -1788,21 +1899,21 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
     delete:
       operationId: SafaJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
     patch:
       operationId: SafaJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
   /api/safa/{id}/relationships/{relName}:
     get:
       operationId: SafaJsonApiController_value
@@ -1810,28 +1921,28 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
     post:
       operationId: SafaJsonApiController_value
       parameters: []
       responses:
         '201':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
     delete:
       operationId: SafaJsonApiController_value
       parameters: []
       responses:
         '204':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
     patch:
       operationId: SafaJsonApiController_value
       parameters: []
       responses:
         '200':
           description: ''
-      tags: *ref_28
+      tags: *ref_29
 info:
   title: Knox pro
   description: joy of engineering ;) thanks Allah.

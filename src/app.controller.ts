@@ -33,6 +33,8 @@ import { extname } from 'path';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { decryptAESKey, decryptPayload, getPublicKey } from './common/security';
+import EventBus from './zoi/events/event-bus';
+import { YasserNasser } from './core/entity';
 @Controller()
 export class AppController {
   constructor(
@@ -40,8 +42,43 @@ export class AppController {
     private readonly appService: AppService
   ) { }
 
-  @Get()
-  getHello(): string {
+  @Get('hellow')
+  getHello(@Query('id') workflowRunId: string, @Query('done') done: string): string {
+
+    if (done === 'true') {
+      EventBus.emit('workflow.step.completed', {
+        payload: {
+          workflowRunId: workflowRunId, // From your workflow
+          stepId: 'log_completion',
+          status: 'completed',
+          result: {
+            success: true,
+            message: 'Task completed successfully',
+            data: {
+              YasserNasser: "hoooraaaaaa"
+            }
+          },
+          executedBy: 'pulse-module',
+          timestamp: new Date().toISOString()
+        }
+      });
+    } else {
+      // After signature is processed successfully
+      EventBus.emit('approval.granted', {
+        id: `approval_${Date.now()}`,
+        type: 'approval.granted',
+        timestamp: new Date().toISOString(),
+        source: 'signature-api',
+        payload: {
+          workflowRunId: workflowRunId, // From your workflow
+          stepId: 'wait_for_signature', // The step that's waiting
+          approved: true,
+          approver: 'trainer_user_id',
+          comments: 'Document signed successfully'
+        }
+      });
+    }
+
     return this.appService.getHello();
   }
 
@@ -95,7 +132,7 @@ export class AppController {
     });
 
     this.eventEmitter.emit('pulse.flow_grant', {
-      resourceId:  "uploaded-file-workflow-lol",
+      resourceId: "uploaded-file-workflow-lol",
       resourceType: 'lab_report',
       grants: [
         {
@@ -105,7 +142,7 @@ export class AppController {
         }
       ]
     });
-    
+
 
 
     return {

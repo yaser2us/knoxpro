@@ -77,6 +77,7 @@ export class EventBus {
                 try {
                     await handler(event);
                 } catch (error) {
+                    console.log(error)
                     this.logger.error(`❌ [emit] Error in original handler for ${eventType}:`, error);
                 }
             }

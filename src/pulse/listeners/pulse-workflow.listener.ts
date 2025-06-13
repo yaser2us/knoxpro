@@ -43,7 +43,8 @@ export class PulseWorkflowListener implements ModuleEventListener, OnModuleInit 
             'document.policy_update.*',
             'workflow.pulse.*',
             'user.pulse.*',
-            'document.lifecycle'  // Exact match for this one
+            'document.lifecycle',  // Exact match for this one
+            'knox.task.execute'
         ];
     }
 
@@ -55,7 +56,7 @@ export class PulseWorkflowListener implements ModuleEventListener, OnModuleInit 
 
         try {
             // Route to appropriate internal function based on event type
-            if (eventType === 'document.school.created') {
+            if (eventType === 'document.user.created') {
                 this.logger.log(`🎯 [listen] Handling document.lifecycle event`);
                 await this.handleDocumentLifecycleEvent(event);
             } else if (eventType.includes('employee_onboarding')) {
@@ -90,16 +91,17 @@ export class PulseWorkflowListener implements ModuleEventListener, OnModuleInit 
 
     // 🎯 Event handlers
     private async handleDocumentLifecycleEvent(event: any): Promise<void> {
-        const { payload } = event;
+        // const { payload } = event;
+        const { type: eventType, payload } = event;
         this.logger.log(`📄 [lifecycle] Processing document lifecycle event`);
         
         // Extract the actual document event from the nested payload
-        if (payload && payload.type) {
-            this.logger.log(`📄 [lifecycle] Inner event type: ${payload.type}`);
+        if (eventType) {
+            this.logger.log(`📄 [lifecycle] Inner event type: ${eventType}`);
             
             // Route based on the inner event type
-            const innerEventType = payload.type;
-            if (innerEventType.includes('employee_onboarding')) {
+            const innerEventType = eventType;
+            if (innerEventType.includes('document.school.created')) {
                 await this.handleOnboardingEvent(payload);
             } else if (innerEventType.includes('performance_review')) {
                 await this.handlePerformanceReviewEvent(payload);
@@ -114,6 +116,7 @@ export class PulseWorkflowListener implements ModuleEventListener, OnModuleInit 
 
     private async handleOnboardingEvent(event: any): Promise<void> {
         this.logger.log(`👨‍💼 [onboarding] Processing onboarding event`);
+        EventBus.emit('workflow.completed', event);
         // Implementation for onboarding logic
     }
 
