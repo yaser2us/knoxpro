@@ -328,7 +328,7 @@ export class PulseAccessService {
     actionType: string;
     userMetadata?: Record<string, any>;
     resourceMetadata?: Record<string, any>;
-  }): Promise<{ granted: boolean; grantedBy?: 'access_action' | 'role_permission' | 'policy' | 'root' }> {
+  }): Promise<{ granted: boolean; policy: {}, grantedBy?: 'access_action' | 'role_permission' | 'policy' | 'root' }> {
     let {
       role,
       actorId,
@@ -362,7 +362,7 @@ export class PulseAccessService {
         }
       });
       if (direct) {
-        return { granted: true, grantedBy: 'access_action' };
+        return { granted: true, grantedBy: 'access_action', policy: direct };
       }
     }
 
@@ -391,7 +391,7 @@ export class PulseAccessService {
       });
 
       if (permission) {
-        return { granted: true, grantedBy: 'role_permission' };
+        return { granted: true, grantedBy: 'role_permission', policy: permission };
       }
     }
 
@@ -417,7 +417,7 @@ export class PulseAccessService {
         // console.log('[policy]', policy, context, resourceMetadata, policy.conditions);
 
         if (this.evaluateConditions(context, resourceMetadata, policy.conditions)) {
-          return { granted: true, grantedBy: 'policy' };
+          return { granted: true, grantedBy: 'policy', policy: policy.conditions };
         }
       }
     }
@@ -425,7 +425,7 @@ export class PulseAccessService {
     console.log('[canAccess] No direct access, role permission or policy matched',)
 
     // Fallback
-    return { granted: false, grantedBy: 'root' };
+    return { granted: false, grantedBy: 'root', policy: {} };
   }
 
   async getAccessInsight(params: {

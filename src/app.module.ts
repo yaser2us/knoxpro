@@ -4,6 +4,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { JsonApiModule, TypeOrmJsonApiModule } from 'json-api-nestjs';
+
+// import { JsonApiQuery } from 'nestjs-json-api';
+
 // import {
 //   // Users,
 //   // Addresses,
@@ -87,6 +90,8 @@ import { winstonConfig } from './common/logger/logger.config';
 import { LoggerModule } from './common/logger/logger.module';
 import { YasserNasser } from './core/entity';
 import { School } from './core/entity/school.entity';
+import { EnhancedPulseInterceptor } from './pulse/interceptor/enhanced.pulse.interceptor';
+import { CorrectedPulseInterceptor } from './pulse/interceptor/enhanced.pulse.interceptor.v2';
 const entities: (Function | EntitySchema)[] = [
   User,
   Workspace,
@@ -207,7 +212,7 @@ const entities: (Function | EntitySchema)[] = [
 
     {
       provide: APP_INTERCEPTOR,
-      useClass: PulseInterceptor, // ✅ Register interceptor globally
+      useClass: CorrectedPulseInterceptor //EnhancedPulseInterceptor //PulseInterceptor, // ✅ Register interceptor globally
     },
     // {
     //   provide: 'WinstonLoggerService',
