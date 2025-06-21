@@ -42,6 +42,20 @@ export class AppController {
     private readonly appService: AppService
   ) { }
 
+  @Get('pipe-test')
+  testPipe(@Query() query: any) {
+    console.log('🧪 Testing pipe - received query:', query);
+
+    return {
+      message: 'Pipe test successful',
+      originalQuery: query,
+      hasContext: !!query.context,
+      userContextExists: !!query.context?.userContext,
+      contextKeys: query.context ? Object.keys(query.context) : [],
+      timestamp: new Date().toISOString()
+    };
+  }
+
   @Get('hellow')
   getHello(@Query('id') workflowRunId: string, @Query('done') done: string): string {
 

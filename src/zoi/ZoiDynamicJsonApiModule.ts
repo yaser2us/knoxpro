@@ -1,6 +1,7 @@
 // src/zoi/zoi-dynamic-jsonapi.module.ts
 import { DynamicModule, Module } from '@nestjs/common';
-import { JsonApiModule, TypeOrmJsonApiModule } from 'json-api-nestjs';
+import { JsonApiModule } from '@yaser2us/json-api-nestjs';
+import { TypeOrmJsonApiModule } from '@yaser2us/json-api-nestjs-typeorm';
 import dataSource, { config } from '../database';
 
 import {
@@ -20,13 +21,19 @@ import { Document, DocumentAttachment, DocumentFlow, DocumentSignature, Document
 import { ZoiEntityLoaderService } from './ZoiEntityLoaderService';
 import { DataSource } from 'typeorm';
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmOptions } from 'json-api-nestjs/src/lib/types';
+// import { TypeOrmOptions } from 'json-api-nestjs/src/lib/types';
 import { WorkflowTemplate } from './entity/workflow.template.entity';
 import { WorkflowRun } from './entity/workflow.run.entity';
 import { WorkflowLog } from './entity/workflow.log.entity';
 import { UUIDValidationPipe } from 'src/common/pipe/uuid.pipe';
 import { School } from 'src/core/entity/school.entity';
 import { YasserNasser } from 'src/core/entity';
+import { EnhancedUserContextPipe } from 'src/common/pipe/enhanced-user-context.pipe';
+
+function isEntityClass(fn: any): fn is { new(...args: any[]): any } {
+    return typeof fn === 'function' && /^\s*class\s+/.test(fn.toString());
+}
+
 
 const entities = [
     School,
@@ -111,13 +118,16 @@ export class ZoiDynamicJsonApiModule {
                         WorkflowTemplate,
                         WorkflowRun,
                         WorkflowLog,
-                        ...dynamic
+                        // ...dynamic
+                        ...dynamic.filter(isEntityClass)
                     ],
                     options: {
                         debug: true,
                         requiredSelectField: false,
                         operationUrl: 'operation',
-                        pipeForId: UUIDValidationPipe
+                        pipeForId: UUIDValidationPipe,
+                        pipeForQuery: EnhancedUserContextPipe,  // ✨ Use custom pipe
+                        enableContext: true
                     },
                 }),
             ],

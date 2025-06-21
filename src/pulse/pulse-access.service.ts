@@ -8,6 +8,22 @@ import { UserRole } from './entity/user.role.entity';
 import { AccessPolicy } from './entity/access.policy.entity';
 import { User } from './entity';
 
+
+// Add this interface to your existing interfaces
+interface WorkspaceAccessResult {
+  id: string;
+  accessType: 'individual' | 'policy';
+  sourceTable: 'access_actions' | 'access_policies';
+  userId?: string;
+  userName?: string;
+  userEmail?: string;
+  resourceId: string;
+  actionType: string;
+  expiresAt?: Date;
+  conditions?: Record<string, any>;
+  policyName?: string;
+}
+
 interface AccessInsightDto {
   userId: string;
   name: string;
@@ -64,7 +80,7 @@ export class PulseAccessService {
     private readonly accessActionRepo: Repository<AccessAction>,
 
     @InjectRepository(UserRole)
-    private readonly userRoleRepo: Repository<UserRole>,
+    public readonly userRoleRepo: Repository<UserRole>,
 
     @InjectRepository(RolePermission)
     private readonly rolePermissionRepo: Repository<RolePermission>,
@@ -73,7 +89,7 @@ export class PulseAccessService {
     private readonly policyRepo: Repository<AccessPolicy>,
 
     @InjectRepository(User)
-    private readonly userRepo: Repository<User>,
+    public readonly userRepo: Repository<User>,
   ) { }
 
   public evaluateConditions(
@@ -125,199 +141,6 @@ export class PulseAccessService {
 
     return evaluate(conditions);
   }
-
-
-  // private evaluateConditions(
-  //   userAttrs: Record<string, any>,
-  //   resourceAttrs: Record<string, any>,
-  //   conditions: Record<string, any>
-  // ): boolean {
-  //   return Object.entries(conditions).every(([key, expected]) => {
-
-  //     const actual = userAttrs[key] ?? resourceAttrs[key];
-  //     console.log('[evaluateConditions]', { key, expected, actual });
-  //     if (Array.isArray(expected)) {
-  //       return expected.includes(actual);
-  //     }
-  //     return actual === expected;
-  //   });
-  // }
-
-  // async canAccess(params: {
-  //   actorId: string;
-  //   workspaceId: string;
-  //   resourceId?: string;
-  //   resourceType: string;
-  //   actionType: string;
-  //   userMetadata?: Record<string, any>;
-  //   resourceMetadata?: Record<string, any>;
-  // }): Promise<boolean> {
-  //   const {
-  //     actorId,
-  //     workspaceId,
-  //     resourceId,
-  //     resourceType,
-  //     actionType,
-  //     userMetadata = {},
-  //     resourceMetadata = {}
-  //   } = params;
-
-  //   // 1. Direct access check (access_actions)
-  //   if (resourceId) {
-  //     const direct = await this.accessActionRepo.findOne({
-  //       where: {
-  //         actor: { id: actorId },
-  //         resourceId,
-  //         resourceType,
-  //         actionType,
-  //         enabled: true,
-  //         expiresAt: Raw(alias => `${alias} IS NULL OR ${alias} > NOW()`)
-  //       }
-  //     });
-  //     if (direct) return true;
-  //   }
-
-  //   // 2. Role-based permission check
-  //   const roles = await this.userRoleRepo.find({
-  //     where: {
-  //       user: { id: actorId },
-  //       workspace: { id: workspaceId },
-  //     },
-  //     relations: ['role']
-  //   });
-
-  //   const roleIds = roles.map(r => r.role.id);
-
-  //   if (roleIds.length > 0) {
-  //     const permission = await this.rolePermissionRepo.findOne({
-  //       where: {
-  //         role: { id: In(roleIds) },
-  //         resourceType: { name: resourceType },
-  //         actionName: actionType,
-  //       },
-  //       relations: ['role', 'resourceType']
-  //     });
-
-  //     if (permission) return true;
-  //   }
-
-  //   // 3. ABAC policy check
-  //   const policies = await this.policyRepo.find({
-  //     where: {
-  //       resourceType,
-  //       actionType,
-  //     }
-  //   });
-
-  //   console.log('[policies]', policies, resourceType, actionType)
-
-  //   for (const policy of policies) {
-  //     if (this.evaluateConditions(userMetadata, resourceMetadata, policy.conditions)) {
-  //       return true;
-  //     }
-  //   }
-
-  //   return false;
-  // }
-
-
-  // async canAccess(params: {
-  //   actorId: string;
-  //   workspaceId: string;
-  //   resourceId?: string;
-  //   resourceType: string;
-  //   actionType: string;
-  //   userMetadata?: Record<string, any>;
-  //   resourceMetadata?: Record<string, any>;
-  // }): Promise<boolean> {
-  //   const {
-  //     actorId,
-  //     workspaceId,
-  //     resourceId,
-  //     resourceType,
-  //     actionType,
-  //     userMetadata = {},
-  //     resourceMetadata = {}
-  //   } = params;
-
-  //   let hasAccess = false;
-
-  //   // 1. Direct access check (access_actions)
-  //   if (resourceId) {
-  //     const direct = await this.accessActionRepo.findOne({
-  //       where: {
-  //         actor: { id: actorId },
-  //         resourceId,
-  //         resourceType,
-  //         actionType,
-  //         enabled: true,
-  //         expiresAt: Raw(alias => `${alias} IS NULL OR ${alias} > NOW()`)
-  //       }
-  //     });
-  //     if (direct) {
-  //       console.log('[GRANTED] via direct access');
-  //       hasAccess = true;
-  //     }
-  //   }
-
-  //   // 2. Role-based permission check
-  //   if (!hasAccess) {
-  //     const roles = await this.userRoleRepo.find({
-  //       where: {
-  //         user: { id: actorId },
-  //         workspace: { id: workspaceId },
-  //       },
-  //       relations: ['role']
-  //     });
-
-  //     const roleIds = roles.map(r => r.role.id);
-
-  //     if (roleIds.length > 0) {
-  //       const permission = await this.rolePermissionRepo.findOne({
-  //         where: {
-  //           role: { id: In(roleIds) },
-  //           resourceType: { name: resourceType },
-  //           actionName: actionType,
-  //         },
-  //         relations: ['role', 'resourceType']
-  //       });
-
-  //       if (permission) {
-  //         console.log('[GRANTED] via permission access');
-  //         hasAccess = true;
-  //       }
-  //     }
-  //   }
-
-  //   // 3. ABAC policy check
-  //   const enforceAbacAlways = true;
-
-  //   if (enforceAbacAlways || !hasAccess) {
-  //     const policies = await this.policyRepo.find({
-  //       where: {
-  //         resourceType,
-  //         actionType,
-  //         workspace: { id: workspaceId }
-  //       }
-  //     });
-  //     console.log('[policies]', policies, resourceType, actionType)
-
-  //     for (const policy of policies) {
-  //       const passed = this.evaluateConditions(userMetadata, resourceMetadata, policy.conditions);
-  //       if (passed) {
-  //         console.log('[GRANTED] via ABAC access');
-  //         if (!hasAccess) hasAccess = true; // ABAC grants access
-  //       } else if (enforceAbacAlways && hasAccess) {
-  //         console.log('[GRANTED] via enforceAbacAlways ABAC access', passed);
-  //         // ABAC blocked access that would've been allowed
-  //         hasAccess = false;
-  //       }
-  //     }
-  //   }
-
-  //   return hasAccess;
-  // }
-
 
   async canAccess(params: {
     role: string,
@@ -1083,6 +906,409 @@ export class PulseAccessService {
     }
 
     return result;
+  }
+
+  /**
+   * Get all accesses for a specific resource type within a workspace
+   * Returns both individual user access and workspace policies
+   */
+  async getAccessesByWorkspaceAndResource(params: {
+    workspaceId: string;
+    resourceType: string;
+  }): Promise<WorkspaceAccessResult[]> {
+    const { workspaceId, resourceType } = params;
+
+    // Using raw SQL query for better performance with complex joins
+    const query = `
+      -- Individual Access Actions (users in workspace who have specific resource access)
+      SELECT 
+          aa.id,
+          'individual' as access_type,
+          'access_actions' as source_table,
+          u.id as user_id,
+          u.name as user_name,
+          u.email as user_email,
+          aa.resource_id,
+          aa.action_type,
+          aa.expires_at,
+          aa.conditions,
+          NULL as policy_name
+      FROM access_actions aa
+      JOIN users u ON aa.actor_id = u.id
+      JOIN user_roles ur ON u.id = ur.user_id
+      WHERE ur.workspace_id = $1
+        AND aa.resource_type = $2
+        AND aa.enabled = true
+        AND (aa.expires_at IS NULL OR aa.expires_at > NOW())
+      
+      UNION ALL
+      
+      -- Policy-based Access (workspace policies that grant access to resource type)
+      SELECT 
+          ap.id,
+          'policy' as access_type,
+          'access_policies' as source_table,
+          NULL as user_id,
+          NULL as user_name,
+          NULL as user_email,
+          '*' as resource_id,
+          ap.action_type,
+          CASE 
+              WHEN ap.expires_in_days IS NOT NULL 
+              THEN ap.created_at + (ap.expires_in_days || ' days')::INTERVAL
+              ELSE NULL 
+          END as expires_at,
+          ap.conditions,
+          ap.name as policy_name
+      FROM access_policies ap
+      WHERE ap.workspace_id = $1
+        AND ap.resource_type = $2
+      
+      ORDER BY access_type, user_name
+    `;
+
+    const rawResults = await this.accessActionRepo.query(query, [workspaceId, resourceType]);
+
+    // Transform raw results to typed interface
+    return rawResults.map(row => ({
+      id: row.id,
+      accessType: row.access_type,
+      sourceTable: row.source_table,
+      userId: row.user_id,
+      userName: row.user_name,
+      userEmail: row.user_email,
+      resourceId: row.resource_id,
+      actionType: row.action_type,
+      expiresAt: row.expires_at,
+      conditions: row.conditions,
+      policyName: row.policy_name
+    }));
+  }
+
+  /**
+   * Simplified version that returns just the IDs as requested
+   */
+  // async getAccessIdsByWorkspaceAndResource(params: {
+  //   workspaceId: string;
+  //   resourceType: string;
+  // }): Promise<string[]> {
+  //   const results = await this.getAccessesByWorkspaceAndResource(params);
+  //   return results.map(r => r.id);
+  // }
+
+  /**
+   * Check if a user has access to a specific resource type in workspace
+   * Useful for quick permission checks
+   */
+  async hasAccessToResourceType(params: {
+    userId: string;
+    workspaceId: string;
+    resourceType: string;
+    actionType: string;
+  }): Promise<{
+    hasAccess: boolean;
+    grantedBy: 'individual' | 'policy' | null;
+    accessId?: string;
+  }> {
+    const { userId, workspaceId, resourceType, actionType } = params;
+
+    const allAccesses = await this.getAccessesByWorkspaceAndResource({
+      workspaceId,
+      resourceType
+    });
+
+    // Check individual access first
+    const individualAccess = allAccesses.find(
+      access => access.accessType === 'individual' &&
+        access.userId === userId &&
+        access.actionType === actionType
+    );
+
+    if (individualAccess) {
+      return {
+        hasAccess: true,
+        grantedBy: 'individual',
+        accessId: individualAccess.id
+      };
+    }
+
+    // Check policy-based access
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      select: ['metadata']
+    });
+
+    const userRoles = await this.userRoleRepo.find({
+      where: { user: { id: userId }, workspace: { id: workspaceId } },
+      relations: ['role']
+    });
+
+    const policyAccesses = allAccesses.filter(
+      access => access.accessType === 'policy' && access.actionType === actionType
+    );
+
+    for (const policyAccess of policyAccesses) {
+      if (!policyAccess.conditions) continue;
+
+      for (const userRole of userRoles) {
+        const context = {
+          ...user?.metadata,
+          role: userRole.role.name,
+          workspaceId
+        };
+
+        if (this.evaluateConditions(context, {}, policyAccess.conditions)) {
+          return {
+            hasAccess: true,
+            grantedBy: 'policy',
+            accessId: policyAccess.id
+          };
+        }
+      }
+    }
+
+    return { hasAccess: false, grantedBy: null };
+  }
+
+  //////////////////////////////////
+  /**
+   * Get actual resource IDs (not grant IDs) that a user can access
+   * This is what you actually want for filtering your data
+   */
+  async getUserAccessibleResourceIds(params: {
+    userId: string;
+    workspaceId: string;
+    resourceType: string;
+  }): Promise<string[]> {
+    const { userId, workspaceId, resourceType } = params;
+
+    try {
+      // Use the corrected SQL function
+      const result = await this.accessActionRepo.query(
+        'SELECT get_user_accessible_resource_ids($1, $2, $3)',
+        [userId, workspaceId, resourceType]
+      );
+
+      return result[0]?.get_user_accessible_resource_ids || [];
+    } catch (error) {
+      console.error('Error getting user accessible resource IDs:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get detailed access information showing which users can access which resources
+   */
+  async getAccessibleResourceDetails(params: {
+    workspaceId: string;
+    resourceType: string;
+    userId?: string;
+  }): Promise<Array<{
+    resourceId: string;
+    accessType: 'individual' | 'policy';
+    actionType: string;
+    grantedBy: string;
+    userId: string;
+    userName: string;
+  }>> {
+    const { workspaceId, resourceType, userId } = params;
+
+    try {
+      const query = `
+        SELECT * FROM get_accessible_resource_ids_by_workspace_and_resource($1, $2, $3)
+      `;
+      
+      const results = await this.accessActionRepo.query(query, [
+        workspaceId, 
+        resourceType, 
+        userId || null
+      ]);
+
+      return results.map(row => ({
+        resourceId: row.resource_id,
+        accessType: row.access_type,
+        actionType: row.action_type,
+        grantedBy: row.granted_by,
+        userId: row.user_id,
+        userName: row.user_name
+      }));
+    } catch (error) {
+      console.error('Error getting accessible resource details:', error);
+      return [];
+    }
+  }
+
+  /**
+   * CORRECTED: Get access grant IDs (your original function)
+   * Renamed to be clear about what it returns
+   */
+  async getAccessGrantIdsByWorkspaceAndResource(params: {
+    workspaceId: string;
+    resourceType: string;
+  }): Promise<string[]> {
+    const { workspaceId, resourceType } = params;
+
+    const query = `
+      -- Individual Access Grant IDs
+      SELECT aa.id
+      FROM access_actions aa
+      JOIN users u ON aa.actor_id = u.id
+      JOIN user_roles ur ON u.id = ur.user_id
+      WHERE ur.workspace_id = $1
+        AND aa.resource_type = $2
+        AND aa.enabled = true
+        AND (aa.expires_at IS NULL OR aa.expires_at > NOW())
+      
+      UNION ALL
+      
+      -- Policy Access Grant IDs
+      SELECT ap.id
+      FROM access_policies ap
+      WHERE ap.workspace_id = $1
+        AND ap.resource_type = $2
+    `;
+
+    try {
+      const results = await this.accessActionRepo.query(query, [workspaceId, resourceType]);
+      return results.map(row => row.id);
+    } catch (error) {
+      console.error('Error getting access grant IDs:', error);
+      return [];
+    }
+  }
+
+  /**
+   * UPDATED: This should now return actual resource IDs, not grant IDs
+   */
+  async getAccessIdsByWorkspaceAndResource(params: {
+    workspaceId: string;
+    resourceType: string;
+  }): Promise<string[]> {
+    // This method should return resource IDs, not grant IDs
+    // We'll get all users who have access and their accessible resource IDs
+    
+    const { workspaceId, resourceType } = params;
+
+    try {
+      // Get all users in this workspace
+      const usersInWorkspace = await this.userRoleRepo.find({
+        where: { workspace: { id: workspaceId } },
+        relations: ['user']
+      });
+
+      const allAccessibleResourceIds = new Set<string>();
+
+      // For each user, get their accessible resource IDs
+      for (const userRole of usersInWorkspace) {
+        const userResourceIds = await this.getUserAccessibleResourceIds({
+          userId: userRole.user.id,
+          workspaceId,
+          resourceType
+        });
+
+        userResourceIds.forEach(id => allAccessibleResourceIds.add(id));
+      }
+
+      return Array.from(allAccessibleResourceIds);
+    } catch (error) {
+      console.error('Error getting all accessible resource IDs:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Check if a specific resource ID is accessible by a user
+   */
+  async canAccessResource(params: {
+    userId: string;
+    workspaceId: string;
+    resourceType: string;
+    resourceId: string;
+  }): Promise<boolean> {
+    const { userId, workspaceId, resourceType, resourceId } = params;
+
+    try {
+      const accessibleIds = await this.getUserAccessibleResourceIds({
+        userId,
+        workspaceId,
+        resourceType
+      });
+
+      // Check if user has access to this specific resource or wildcard access
+      return accessibleIds.includes(resourceId) || accessibleIds.includes('*') || 
+             accessibleIds.length === 0; // If function returns all resources
+    } catch (error) {
+      console.error('Error checking resource access:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get paginated resources that a user can access
+   * This is useful for your actual API endpoints
+   */
+  async getUserAccessibleResources(params: {
+    userId: string;
+    workspaceId: string;
+    resourceType: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{
+    resourceIds: string[];
+    hasWildcardAccess: boolean;
+    totalAccessible: number;
+  }> {
+    const { userId, workspaceId, resourceType, page = 1, limit = 50 } = params;
+
+    try {
+      const accessibleIds = await this.getUserAccessibleResourceIds({
+        userId,
+        workspaceId,
+        resourceType
+      });
+
+      const hasWildcardAccess = accessibleIds.includes('*');
+
+      if (hasWildcardAccess) {
+        // User has access to all resources - get them from the actual resource table
+        let allResourceIds: string[] = [];
+        
+        switch (resourceType) {
+          case 'school':
+            const schools = await this.accessActionRepo.query(
+              'SELECT id FROM school ORDER BY id LIMIT $1 OFFSET $2',
+              [limit, (page - 1) * limit]
+            );
+            allResourceIds = schools.map(s => s.id.toString());
+            break;
+          // Add other resource types as needed
+        }
+
+        return {
+          resourceIds: allResourceIds,
+          hasWildcardAccess: true,
+          totalAccessible: -1 // -1 indicates all resources
+        };
+      }
+
+      // User has access to specific resources
+      const startIndex = (page - 1) * limit;
+      const paginatedIds = accessibleIds.slice(startIndex, startIndex + limit);
+
+      return {
+        resourceIds: paginatedIds,
+        hasWildcardAccess: false,
+        totalAccessible: accessibleIds.length
+      };
+
+    } catch (error) {
+      console.error('Error getting user accessible resources:', error);
+      return {
+        resourceIds: [],
+        hasWildcardAccess: false,
+        totalAccessible: 0
+      };
+    }
   }
 
 }
