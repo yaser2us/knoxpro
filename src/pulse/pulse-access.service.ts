@@ -273,7 +273,7 @@ export class PulseAccessService {
     for (const grant of directGrants) {
       insights.push({
         userId: grant.actor.id,
-        name: grant.actor.name,
+        name: grant.actor.username,
         actions: [grant.actionType],
         grantedBy: 'access_action',
         expiresAt: grant.expiresAt
@@ -298,7 +298,7 @@ export class PulseAccessService {
       for (const ur of userRoles) {
         insights.push({
           userId: ur.user.id,
-          name: ur.user.name,
+          name: ur.user.username,
           actions: [rolePerm.actionName],
           grantedBy: 'role_permission',
           role: ur.role.name
@@ -335,7 +335,7 @@ export class PulseAccessService {
           if (this.evaluateConditions(context, {}, policy.conditions)) {
             insights.push({
               userId: user.id,
-              name: user.name,
+              name: user.username,
               actions: [policy.actionType],
               grantedBy: 'policy',
               matchedPolicy: policy.name
@@ -460,7 +460,7 @@ export class PulseAccessService {
       } else {
         grouped[key].grants.push({
           userId: a.actor.id,
-          name: a.actor.name,
+          name: a.actor.username,
           actions: [a.actionType],
           grantedBy: 'access_action',
           expiresAt: a.expiresAt
@@ -492,7 +492,7 @@ export class PulseAccessService {
         } else {
           grouped[key].grants.push({
             userId: ur.user.id,
-            name: ur.user.name,
+            name: ur.user.username,
             actions: [rp.actionName],
             grantedBy: 'role_permission',
             role: ur.role.name
@@ -535,7 +535,7 @@ export class PulseAccessService {
           } else {
             grouped[key].grants.push({
               userId: user.id,
-              name: user.name,
+              name: user.username,
               actions: [policy.actionType],
               grantedBy: 'policy',
               matchedPolicy: policy.name
@@ -601,7 +601,7 @@ export class PulseAccessService {
       } else {
         grouped[key].grants.push({
           userId: action.actor.id,
-          name: action.actor.name,
+          name: action.actor.username,
           actions: [action.actionType],
           grantedBy: 'access_action',
           expiresAt: action.expiresAt
@@ -639,7 +639,7 @@ export class PulseAccessService {
         } else {
           grouped[key].grants.push({
             userId: ur.user.id,
-            name: ur.user.name,
+            name: ur.user.username,
             actions: [rp.actionName],
             grantedBy: 'role_permission',
             role: ur.role.name
@@ -687,7 +687,7 @@ export class PulseAccessService {
           if (passed && !matchedUsersMap.has(user.id)) {
             matchedUsersMap.set(user.id, {
               userId: user.id,
-              name: user.name,
+              name: user.username,
               role: ur.role.name
             });
 
