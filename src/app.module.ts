@@ -88,7 +88,7 @@ import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-win
 import * as winston from 'winston';
 import { winstonConfig } from './common/logger/logger.config';
 import { LoggerModule } from './common/logger/logger.module';
-import { YasserNasser } from './core/entity';
+import { YasserNasser, Profile } from './core/entity';
 import { School } from './core/entity/school.entity';
 import { EnhancedPulseInterceptor } from './pulse/interceptor/enhanced.pulse.interceptor';
 import { CorrectedPulseInterceptor } from './pulse/interceptor/enhanced.pulse.interceptor.v2';
@@ -97,6 +97,7 @@ import { GlobalAccessContextInterceptor } from './common/interceptors/global-acc
 import { AccessContextGuard } from './common/guards/access-context.guard';
 const entities: (Function | EntitySchema)[] = [
   User,
+  Profile,
   Workspace,
   Role,
   UserRole,
@@ -167,6 +168,7 @@ const entities: (Function | EntitySchema)[] = [
       entities: [
         School,
         User,
+        Profile,
         Workspace,
         YasserNasser,
         Role,
