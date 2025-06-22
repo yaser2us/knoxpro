@@ -73,9 +73,14 @@ export class User {
   @Column({ type: 'jsonb', nullable: true })
   metadata: Record<string, any>;
 
+  // ADD THIS: workspaceId column to match your database
+  @Column({ type: 'uuid', nullable: true })
+  workspaceId: string;
+
   // Relationships
-  @ManyToMany(() => Workspace, workspace => workspace.users)
-  workspace: Workspace[];
+  @ManyToOne(() => Workspace, workspace => workspace.users, { eager: true })
+  @JoinColumn({ name: 'workspaceId' }) // This tells TypeORM to use the workspaceId column
+  workspace: Workspace;
 
   @OneToOne(() => Profile, profile => profile.user, { cascade: true })
   profile: Profile;
@@ -93,3 +98,31 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 }
+
+// @Entity('users')
+// export class User {
+//   @PrimaryGeneratedColumn('uuid')
+//   id: string;
+
+//   @Column({ unique: true })
+//   email: string;
+
+//   @Column()
+//   name: string;
+
+//   @Column()
+//   domain: string;
+
+//   @Column({ type: 'jsonb', nullable: true })
+//   metadata: Record<string, any>;
+
+//   @OneToMany(() => UserRole, role => role.user)
+//   roles: UserRole[];
+
+//   @OneToMany(() => AccessAction, action => action.actor)
+//   actions: AccessAction[];
+
+//   @ManyToOne(() => Workspace, workspace => workspace.users, { eager: true })
+//   workspace: Workspace;
+// }
+

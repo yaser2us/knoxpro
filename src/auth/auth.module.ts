@@ -1,40 +1,54 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
-import { AuthController } from './auth.controller';
-import { AuthGuard } from '../common/guards/auth.guard';
-import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { LocalStrategy } from './strategy/local.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './strategy/jwt.strategy';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+
+
+// import { JwtStrategy } from './strategy/jwt.strategy';
+import { JwtStrategy } from './strategy/jwt.v2.strategy';
+
+// import { AuthController } from './auth.controller';
+// import { AuthService } from './auth.service';
+
+import { AuthController } from './auth.v2.controller';
+import { AuthService } from './auth.v2.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Profile, User, Workspace } from 'src/core/entity';
 
 @Module({
   imports: [
+    // Register entities for dependency injection
+    TypeOrmModule.forFeature([User, Profile, Workspace]),
+    // Import PassportModule for authentication
     PassportModule,
     UsersModule,
+    // JWT module configuration
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { 
+        expiresIn: '24h', // Extended to 24 hours for better UX
+        issuer: 'pulse-api',
+        audience: 'pulse-app'
+      },
     }),
+    // JwtModule.register({
+    //   global: true,
+    //   secret: jwtConstants.secret,
+    //   signOptions: { expiresIn: '1h' },
+    // }),
   ],
   providers: [
     AuthService,
     LocalStrategy,
     JwtStrategy,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
-    // },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
   ],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [
+    AuthService,
+    JwtModule, // Export for use in other modules
+  ],
 })
 export class AuthModule {}
