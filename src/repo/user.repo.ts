@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../Entity/legacy/users';
-import { Query } from 'json-api-nestjs';
+import { Query } from '@yaser2us/json-api-nestjs';
 
 @Injectable()
 export class YourEntityRepository extends Repository<Users> {
@@ -21,7 +21,7 @@ export class YourEntityRepository extends Repository<Users> {
       .getRawMany();
   }
 
-  async aggregateByFieldSort(query: Query<Users>, field: string) {
+  async aggregateByFieldSort(field: string) {
     let qb = this.repo
       .createQueryBuilder('entity')
       .select(`entity.${field}`, 'groupedField')

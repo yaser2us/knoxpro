@@ -3,8 +3,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { JsonApiModule, TypeOrmJsonApiModule } from 'json-api-nestjs';
-
+import { JsonApiModule } from '@yaser2us/json-api-nestjs';
+import { TypeOrmJsonApiModule } from "@yaser2us/json-api-nestjs-typeorm"
 // import { JsonApiQuery } from 'nestjs-json-api';
 
 // import {
@@ -27,7 +27,7 @@ import { DataSource, DataSourceOptions, EntitySchema } from 'typeorm';
 import { join } from 'path';
 import * as process from 'process';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ExtendUserController } from './user.controller';
+// import { ExtendUserController } from './user.controller';
 import { YourEntityRepository } from './repo/user.repo';
 import { CacheModule } from '@nestjs/cache-manager';
 import { AuthModule } from './auth/auth.module';
@@ -36,7 +36,7 @@ import { CombinedSlugService, QueryParamSlugService, SubdomainSlugService } from
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE, RouterModule } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { SecurityModule } from './security/security.module';
 import { RsaService } from 'src/security/security.service';
@@ -63,8 +63,8 @@ import {
 import { PulseModule } from './pulse/pulse.module';
 //
 import { Document, DocumentAttachment, DocumentFlow, DocumentSignature, DocumentTemplate, FlowTemplate } from './zoi/entity';
-import { DynamicEntityRegistry } from './zoi/dynamic.entity.registry';
-import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
+// import { DynamicEntityRegistry } from './zoi/dynamic.entity.registry';
+// import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
 // import { ZoiDocumentInterceptor } from './zoi/zoi.document.interceptor';
 // const config: DataSourceOptions = {
 //   type: 'postgres', //process.env['DB_TYPE'] as 'postgres' | 'postgres',
@@ -92,6 +92,9 @@ import { YasserNasser } from './core/entity';
 import { School } from './core/entity/school.entity';
 import { EnhancedPulseInterceptor } from './pulse/interceptor/enhanced.pulse.interceptor';
 import { CorrectedPulseInterceptor } from './pulse/interceptor/enhanced.pulse.interceptor.v2';
+import { EnhancedUserContextPipe } from './common/pipe/enhanced-user-context.pipe';
+import { GlobalAccessContextInterceptor } from './common/interceptors/global-access-context.interceptor';
+import { AccessContextGuard } from './common/guards/access-context.guard';
 const entities: (Function | EntitySchema)[] = [
   User,
   Workspace,
@@ -111,6 +114,7 @@ const entities: (Function | EntitySchema)[] = [
 
 @Module({
   imports: [
+    RouterModule.register([]), // 👈 This line ensures ROUTES and ModulesContainer are initialized
     WinstonModule.forRoot(winstonConfig),
     LoggerModule,
     EventEmitterModule.forRoot(),
@@ -185,7 +189,9 @@ const entities: (Function | EntitySchema)[] = [
         debug: true,
         requiredSelectField: false,
         operationUrl: 'operation',
-        pipeForId: UUIDValidationPipe
+        pipeForId: UUIDValidationPipe,
+        pipeForQuery: EnhancedUserContextPipe,  // ✨ Use custom pipe
+        enableContext: true
       },
     }),
   ],
@@ -205,15 +211,28 @@ const entities: (Function | EntitySchema)[] = [
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    // Access Context Guard runs second (after JWT)
+    {
+      provide: APP_GUARD,
+      useClass: AccessContextGuard,
+    },
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: AccessControlInterceptor, // ✅ Register interceptor globally
     // },
 
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CorrectedPulseInterceptor //EnhancedPulseInterceptor //PulseInterceptor, // ✅ Register interceptor globally
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: CorrectedPulseInterceptor //EnhancedPulseInterceptor //PulseInterceptor, // ✅ Register interceptor globally
+    // },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: GlobalAccessContextInterceptor,
+    // },
+    // {
+    //   provide: APP_PIPE,
+    //   useClass: EnhancedUserContextPipe,//
+    // }
     // {
     //   provide: 'WinstonLoggerService',
     //   useClass: WinstonLoggerService
@@ -222,6 +241,7 @@ const entities: (Function | EntitySchema)[] = [
     //   provide: APP_INTERCEPTOR,
     //   useClass: ZoiDocumentInterceptor
     // }
+    // EnhancedUserContextPipe
   ],
   exports: [
     // YourEntityRepository,

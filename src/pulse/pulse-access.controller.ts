@@ -27,6 +27,21 @@ import { extname } from 'path';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PulseAccessService } from './pulse-access.service';
 
+// Add this interface to your existing interfaces
+interface WorkspaceAccessResult {
+    id: string;
+    accessType: 'individual' | 'policy';
+    sourceTable: 'access_actions' | 'access_policies';
+    userId?: string;
+    userName?: string;
+    userEmail?: string;
+    resourceId: string;
+    actionType: string;
+    expiresAt?: Date;
+    conditions?: Record<string, any>;
+    policyName?: string;
+}
+
 interface AccessInsightDto {
     userId: string;
     name: string;
@@ -71,7 +86,7 @@ interface SimulatedAccessResult {
             expected: any;
             actual: any;
             result: boolean;
-          }>;
+        }>;
     };
 }
 
@@ -106,6 +121,14 @@ export class PulseAccessController {
         @Query('workspaceId') workspaceId: string
     ): Promise<{ resourceType: string; actionType: string; grantedBy: string }[]> {
         return this.pulseAccessService.getGrantedResourceTypes(userId, workspaceId);
+    }
+
+    @Get('my-grants')
+    async whatAreMyResources(
+        @Query('workspaceId') workspaceId: string,
+        @Query('resource') resourceType: string
+    ): Promise<string[]> {
+        return this.pulseAccessService.getAccessIdsByWorkspaceAndResource({ workspaceId, resourceType });
     }
 
     @Get('access-grants/grouped')
