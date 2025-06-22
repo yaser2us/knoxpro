@@ -65,6 +65,9 @@ export class Profile {
     @Column({ type: 'varchar', length: 100, nullable: true })
     timezone: string;
 
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    phoneNumber: string;
+
     @Column({ type: 'varchar', length: 10, nullable: true })
     locale: string;
 

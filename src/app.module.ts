@@ -37,7 +37,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE, RouterModule } from '@nestjs/core';
-import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+// import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from './common/guards/jwt-auth.v2.guard';
 import { SecurityModule } from './security/security.module';
 import { RsaService } from 'src/security/security.service';
 import { AccessControlInterceptor } from './common/interceptors/access.control.interceptor';
@@ -214,10 +215,10 @@ const entities: (Function | EntitySchema)[] = [
       useClass: JwtAuthGuard,
     },
     // Access Context Guard runs second (after JWT)
-    {
-      provide: APP_GUARD,
-      useClass: AccessContextGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AccessContextGuard,
+    // },
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: AccessControlInterceptor, // ✅ Register interceptor globally
