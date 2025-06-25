@@ -1,9 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
 @Entity('documents')
 export class Document {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
+
+  @Column()
+  barCode: string;
 
   @Column()
   racingCode: string;
@@ -53,6 +56,10 @@ export class Document {
   @Column()
   witnessControllerSignature: string;
 
-  @CreateDateColumn()
+  // Timestamps
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }
