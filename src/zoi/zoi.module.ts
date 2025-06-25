@@ -33,6 +33,11 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ZoiWorkflowTriggerService } from './services/zoi-workflow-trigger.service';
 import { ZoiDebugController } from './controllers/zoi-debug.controller';
 import { WorkflowOrchestrator } from './services/workflow-orchestrator.service';
+import { ZoiDemoController } from './controllers/ZoiDemoController';
+import { ZoiWorkflowService } from './services/ZoiWorkflowService';
+import { ZoiEntityLoaderService } from './ZoiEntityLoaderService';
+import { ZoiWorkflowController } from './controllers/workflow.controller';
+import { User } from 'src/core/entity';
 // import { ZoiHotReloadService } from './zoi.hot.reload.service';
 
 
@@ -50,6 +55,7 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         }),
         LoggerModule.register('ZoiStepExecutor'),
         TypeOrmModule.forFeature([
+            User,
             Document,
             DocumentFlow,
             DocumentTemplate,
@@ -66,7 +72,9 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
     ],
     controllers: [
         ZoiController,
-        ZoiDebugController
+        ZoiDemoController,
+        ZoiDebugController,
+        ZoiWorkflowController
     ],
     providers: [
         // ZoiHotReloadService,
@@ -75,6 +83,7 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         //     useFactory: (winstonLogger) => new WinstonLoggerService(winstonLogger, 'winstonLogger'),
         //     inject: [WINSTON_MODULE_NEST_PROVIDER],
         //   },
+        ZoiWorkflowService,
         ZoiBootstrapService,
         ZoiSchemaService,
         DocumentLifecycleService,
@@ -90,6 +99,7 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         ZoiWorkflowTriggerService,
         WorkflowOrchestrator,
         ZoiFlowEngine,
+        ZoiEntityLoaderService,
 
         // Event System Services
         // EventMonitoringService,
@@ -113,6 +123,8 @@ export const ENTITY_PARAM_MAP = Symbol('ENTITY_PARAM_MAP');
         // { provide: ENTITY_PARAM_MAP, useValue: new Map() },
     ],
     exports: [
+        ZoiEntityLoaderService,
+        ZoiWorkflowService,
         ZoiBootstrapService,
         ZoiSchemaService,
         ZoiFlowEngine,

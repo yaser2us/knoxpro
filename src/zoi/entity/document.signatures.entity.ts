@@ -1,42 +1,53 @@
-// ----------------------
-// Zoi Entities (TypeORM)
-// ----------------------
-
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    ManyToOne,
-    JoinColumn,
-    OneToMany
-} from 'typeorm';
-import { User } from '../../core/entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from '../../pulse/entity';
 import { Document } from './document.entity';
 
-// 4. DocumentSignature
 @Entity('document_signatures')
 export class DocumentSignature {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => Document, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'document_id' })
-    document: Document;
-
-    @ManyToOne(() => User)
-    @JoinColumn({ name: 'user_id' })
-    user: User;
+    // Original fields (keep for backward compatibility)
+    @Column()
+    role: string;
 
     @Column()
-    role: string; // Role of signer (trainer, lab supervisor, etc.)
-
-    @Column()
-    action: 'signed' | 'approved' | 'rejected';
+    action: string;
 
     @Column({ nullable: true })
-    signature: string; // base64 or SVG, etc.
+    signature: string;
 
-    @Column({ type: 'timestamp' })
+    @Column({ name: 'signedAt' })
     signedAt: Date;
+
+    @Column({ type: 'uuid', nullable: true })
+    document_id: string | null;
+
+    @Column({ type: 'uuid', nullable: true })
+    user_id: string | null;
+
+    // 🆕 NEW: Generic resource fields
+    @Column({ nullable: true })
+    resource_type: string;
+
+    @Column({ type: 'uuid', nullable: true })
+    resource_id: string | null;
+
+    @Column({ nullable: true })
+    workflow_step: string;
+
+    @Column({ type: 'text', nullable: true })
+    notes: string | null;
+
+    @Column({ type: 'timestamp', nullable: true, name: 'signed_at_nullable' })
+    signed_at_nullable: Date | null;
+
+    // Relationships
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn({ name: 'user_id' })
+    user?: User;
+
+    @ManyToOne(() => Document, { nullable: true })
+    @JoinColumn({ name: 'document_id' })
+    document?: Document;
 }
