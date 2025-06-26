@@ -43,7 +43,7 @@ import { SecurityModule } from './security/security.module';
 import { RsaService } from 'src/security/security.service';
 import { AccessControlInterceptor } from './common/interceptors/access.control.interceptor';
 
-import dataSource, { config } from './database';
+import { dataSource, config } from './database';
 
 import { UUIDValidationPipe } from './common/pipe/uuid.pipe';
 import { PulseInterceptor } from "./pulse/pulse.interceptor";
@@ -161,42 +161,42 @@ const entities: (Function | EntitySchema)[] = [
       ...config,
       synchronize: true,
       autoLoadEntities: true,
-      logging: false,
+      logging: false,//
     }),
     // ZoiDynamicJsonApiModule.forRootAsync(),
-    JsonApiModule.forRoot(TypeOrmJsonApiModule, {
-      ...dataSource,
-      entities: [
-        School,
-        User,
-        Profile,
-        Workspace,
-        YasserNasser,
-        Role,
-        UserRole,
-        ResourceType,
-        ResourceAction,
-        RolePermission,
-        AccessAction,     // ✅ Add this
-        AccessEvent,       // ✅ And this
-        Document,
-        DocumentAttachment,
-        DocumentFlow,
-        DocumentSignature,
-        DocumentTemplate,
-        FlowTemplate
-      ],
-      // controllers: [ExtendUserController],
-      // providers: [YourEntityRepository],
-      options: {
-        debug: true,
-        requiredSelectField: false,
-        operationUrl: 'operation',
-        pipeForId: UUIDValidationPipe,
-        pipeForQuery: EnhancedUserContextPipe,  // ✨ Use custom pipe
-        enableContext: true
-      },
-    }),
+    // JsonApiModule.forRoot(TypeOrmJsonApiModule, {
+    //   ...dataSource,
+    //   entities: [
+    //     School,
+    //     User,
+    //     Profile,
+    //     Workspace,
+    //     YasserNasser,
+    //     Role,
+    //     UserRole,
+    //     ResourceType,
+    //     ResourceAction,
+    //     RolePermission,
+    //     AccessAction,     // ✅ Add this
+    //     AccessEvent,       // ✅ And this
+    //     Document,
+    //     DocumentAttachment,
+    //     DocumentFlow,
+    //     DocumentSignature,
+    //     DocumentTemplate,
+    //     FlowTemplate
+    //   ],
+    //   // controllers: [ExtendUserController],
+    //   // providers: [YourEntityRepository],
+    //   options: {
+    //     debug: true,
+    //     requiredSelectField: false,
+    //     operationUrl: 'operation',
+    //     pipeForId: UUIDValidationPipe,
+    //     pipeForQuery: EnhancedUserContextPipe,  // ✨ Use custom pipe
+    //     enableContext: true
+    //   },
+    // }),
   ],
   controllers: [AppController],
 

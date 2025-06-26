@@ -2,7 +2,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { JsonApiModule } from '@yaser2us/json-api-nestjs';
 import { TypeOrmJsonApiModule } from '@yaser2us/json-api-nestjs-typeorm';
-import dataSource, { config } from '../database';
+import { config, dataSource } from '../database';
 
 import {
     AccessAction,
@@ -102,6 +102,8 @@ export class ZoiDynamicJsonApiModule {
                         WorkflowTemplate,
                         WorkflowRun,
                         WorkflowLog,
+                        DocumentSignature,
+                        User
                     ]),
                     
                     // Configure JSON-API module with all entities
@@ -171,6 +173,8 @@ export class ZoiDynamicJsonApiModule {
                         WorkflowTemplate,
                         WorkflowRun,
                         WorkflowLog,
+                        DocumentSignature,
+                        User
                     ]),
                     JsonApiModule.forRoot(TypeOrmJsonApiModule, {
                         ...dataSource,
