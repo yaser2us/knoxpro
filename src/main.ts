@@ -13,7 +13,7 @@ import * as yaml from 'js-yaml';
 
 import { config } from './database';
 import { JsonNormalizerPipe } from './common/pipe/json.normalizer.pipe';
-import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule';
+import { ZoiDynamicJsonApiModule } from './zoi/ZoiDynamicJsonApiModule.v2';
 import * as qs from 'qs';
 
 // Option 1: Contribute a PR

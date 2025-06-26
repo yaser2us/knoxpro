@@ -2,7 +2,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { JsonApiModule } from '@yaser2us/json-api-nestjs';
 import { TypeOrmJsonApiModule } from '@yaser2us/json-api-nestjs-typeorm';
-import dataSource, { config } from '../database';
+import { config, dataSource } from '../database';
 
 import {
     AccessAction,
