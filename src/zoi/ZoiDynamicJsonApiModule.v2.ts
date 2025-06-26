@@ -79,6 +79,8 @@ export class ZoiDynamicJsonApiModule {
             const loader = new ZoiEntityLoaderService(bootstrapDS);
             const dynamicEntities = await loader.loadAll();
             
+            console.log('[zoi] Dynamic entities to register:', dynamicEntities.map(e => e.name));
+
             console.log(`[zoi] ✓ Loaded ${dynamicEntities.length} dynamic entities`);
             
             // Log all entities for debugging
