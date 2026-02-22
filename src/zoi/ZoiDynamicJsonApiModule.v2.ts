@@ -30,6 +30,7 @@ import { UUIDValidationPipe } from 'src/common/pipe/uuid.pipe';
 import { School } from 'src/core/entity/school.entity';
 import { YasserNasser, Profile } from 'src/core/entity';
 import { EnhancedUserContextPipe } from 'src/common/pipe/enhanced-user-context.pipe';
+import { MissionDefinition } from 'src/mission/entity';
 
 function isEntityClass(fn: any): fn is { new(...args: any[]): any } {
     return typeof fn === 'function' && /^\s*class\s+/.test(fn.toString());
@@ -58,6 +59,7 @@ const staticEntities = [
     WorkflowTemplate,
     WorkflowRun,
     WorkflowLog,
+    MissionDefinition,
 ];
 
 @Module({})
@@ -132,6 +134,7 @@ export class ZoiDynamicJsonApiModule {
                             WorkflowTemplate,
                             WorkflowRun,
                             WorkflowLog,
+                            MissionDefinition,
                             ...dynamicEntities.filter(isEntityClass)
                         ],
                         options: {

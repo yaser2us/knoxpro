@@ -62,6 +62,7 @@ import {
 } from "./pulse/entity"
 
 import { PulseModule } from './pulse/pulse.module';
+import { MissionModule } from './mission/mission.module';
 //
 import { Document, DocumentAttachment, DocumentFlow, DocumentSignature, DocumentTemplate, FlowTemplate } from './zoi/entity';
 // import { DynamicEntityRegistry } from './zoi/dynamic.entity.registry';
@@ -125,6 +126,7 @@ const entities: (Function | EntitySchema)[] = [
     SecurityModule,
     PulseModule,
     ZoiModule,
+    MissionModule,
     // CacheModule.register({
     //   ttl: 3600, // Cache expiration time in seconds (1 hour)
     //   max: 1000, // Maximum items in cache

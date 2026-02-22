@@ -10,9 +10,10 @@ const config: DataSourceOptions = {
     database: "yasser", //process.env['DB_NAME'],
     logging: 'all', //process.env['DB_LOGGING'] === '1',
     entities: [
-        join(__dirname, '/pulse/entity/*{.ts,.js}'), 
+        join(__dirname, '/pulse/entity/*{.ts,.js}'),
         join(__dirname, '/zoi/entity/*{.ts,.js}'),
         join(__dirname, '/core/entity/*{.ts,.js}'),
+        join(__dirname, '/mission/entity/*{.ts,.js}'),
     ],
     // migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
     // entities: [join(__dirname, '/entities/**/*{.ts,.js}')],
