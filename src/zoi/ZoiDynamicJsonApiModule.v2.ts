@@ -28,7 +28,7 @@ import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UUIDValidationPipe } from 'src/common/pipe/uuid.pipe';
 import { School } from 'src/core/entity/school.entity';
-import { YasserNasser, Profile } from 'src/core/entity';
+import { YasserNasser, Profile, Mission, MissionActivity, Bank } from 'src/core/entity';
 import { EnhancedUserContextPipe } from 'src/common/pipe/enhanced-user-context.pipe';
 
 function isEntityClass(fn: any): fn is { new(...args: any[]): any } {
@@ -39,6 +39,9 @@ function isEntityClass(fn: any): fn is { new(...args: any[]): any } {
 const staticEntities = [
     School,
     YasserNasser,
+    Mission,
+    MissionActivity,
+    Bank,
     User,
     Profile,
     Workspace,
@@ -113,6 +116,9 @@ export class ZoiDynamicJsonApiModule {
                         entities: [
                             School,
                             YasserNasser,
+                            Mission,
+                            MissionActivity,
+                            Bank,
                             User,
                             Profile,
                             Workspace,
@@ -181,6 +187,9 @@ export class ZoiDynamicJsonApiModule {
                         entities: [
                             School,
                             YasserNasser,
+                            Mission,
+                            MissionActivity,
+                            Bank,
                             User,
                             Profile,
                             Workspace,

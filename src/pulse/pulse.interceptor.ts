@@ -68,7 +68,9 @@ export const rawWhitelistPaths: Omit<WhitelistRule, 'matcher'>[] = [
   // { method: 'GET', path: '/api/yasser-nasser/:id' },
   // { method: 'POST', path: '/api/yasser-nasser/:id' },
   // { method: 'PATCH', path: '/api/yasser-nasser/:id' },
-//
+
+  { method: 'GET', path: '/api/mission' },
+
   { method: 'GET', path: '/api/workflow-template' },
   { method: 'GET', path: '/api/workflow-template/:id' },
   { method: 'POST', path: '/api/workflow-template' },
